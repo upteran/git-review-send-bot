@@ -1,0 +1,61 @@
+{
+  "name": "review-send-bot",
+  "version": "0.0.1",
+  "description": "Telegram bot to send and set links to chat user",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest --testPathPattern .*\\.test\\.ts",
+    "test:watch": "yarn test --watch",
+    "start": "ts-node .",
+    "start:dev": "nodemon -x ts-node . -e ts,json",
+    "dev": "npm-run-all --parallel start:dev test:watch"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/upteran/git-review-send-bot"
+  },
+  "keywords": [
+    "telegram",
+    "bot",
+    "review",
+    "send",
+    "set"
+  ],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/upteran/git-review-send-bot/issues"
+  },
+  "homepage": "https://github.com/upteran/git-review-send-bot#readme",
+  "dependencies": {
+    "@types/got": "^9.6.12",
+    "@types/node": "^14.17.18",
+    "dayjs": "^1.10.7",
+    "got": "^11.5.1",
+    "telegraf": "^3.39.0",
+    "ts-node": "^10.2.1",
+    "typescript": "^3.9.10"
+  },
+  "devDependencies": {
+    "@types/jest": "^26.0.24",
+    "ava": "^0.17.0",
+    "eslint": "^7.32.0",
+    "eslint-config-airbnb": "^18.2.0",
+    "eslint-config-prettier": "^6.12.0",
+    "eslint-loader": "^4.0.2",
+    "eslint-plugin-import": "^2.24.2",
+    "eslint-plugin-jsx-a11y": "^6.3.1",
+    "eslint-plugin-prettier": "^3.4.1",
+    "eslint-plugin-standard": "^4.0.1",
+    "faker": "^3.1.0",
+    "jest": "^26.2.2",
+    "nock": "^9.0.2",
+    "nodemon": "^2.0.12",
+    "npm-run-all": "^3.1.1",
+    "prettier": "^2.4.1",
+    "ts-jest": "^26.5.6"
+  }
+}
