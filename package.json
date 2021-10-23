@@ -34,16 +34,20 @@
     "@types/got": "^9.6.12",
     "@types/node": "^14.17.18",
     "dayjs": "^1.10.7",
+    "firebase": "^9.1.1",
     "got": "^11.5.1",
+    "nanoid": "^3.1.28",
     "telegraf": "^3.39.0",
     "ts-node": "^10.2.1",
-    "typescript": "^3.9.10"
+    "typescript": "^4.4.3",
+    "typescript-eslint": "0.0.1-alpha.0"
   },
   "devDependencies": {
     "@types/jest": "^26.0.24",
+    "@typescript-eslint/eslint-plugin": "^4.32.0",
+    "@typescript-eslint/parser": "^4.32.0",
     "ava": "^0.17.0",
     "eslint": "^7.32.0",
-    "eslint-config-airbnb": "^18.2.0",
     "eslint-config-prettier": "^6.12.0",
     "eslint-loader": "^4.0.2",
     "eslint-plugin-import": "^2.24.2",

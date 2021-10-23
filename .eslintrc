@@ -1,11 +1,8 @@
 {
   "extends": [
-    "airbnb",
     "prettier",
     "prettier/standard",
-    "airbnb-typescript/base",
     "plugin:@typescript-eslint/recommended",
-    "plugin:unicorn/recommended",
     "plugin:prettier/recommended",
     "prettier/@typescript-eslint"
   ],
@@ -13,7 +10,6 @@
     "prettier",
     "standard",
     "@typescript-eslint",
-    "unicorn",
     "import"
   ],
   "parserOptions": {
@@ -30,14 +26,8 @@
     "import/extensions": "off",
     "import/no-unresolved": "off",
     "no-unused-expressions": ["error", { "allowShortCircuit": true }],
-    "jsx-a11y/anchor-is-valid": [
-      "error",
-      {
-        "components": ["Link"],
-        "specialLink": ["hrefLeft", "hrefRight"],
-        "aspects": ["invalidHref", "preferButton"]
-      }
-    ],
-    "no-invalid-this": "off"
+    "no-invalid-this": "off",
+    "@typescript-eslint/ban-ts-comment": "off",
+    "@typescript-eslint/ban-types": "off"
   }
 }
