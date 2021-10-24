@@ -32,7 +32,10 @@ export const groupService = (api: {
   getReviewQueue: (apiConfig: GroupApiType) => Array<number>;
   addUserToGroup: (apiConfig: GroupApiType, user: User) => void;
   updateUser: (apiConfig: GroupApiType, params: object) => void;
-  updateQueue: (apiConfig: GroupApiType, reviewQueue: Array<number>) => void;
+  updateReviewQueue: (
+    apiConfig: GroupApiType,
+    reviewQueue: Array<number>
+  ) => void;
 }): IGroupService => {
   // init api
   const serviceApi = api;
@@ -76,7 +79,7 @@ export const groupService = (api: {
 
     serviceApi.addUserToGroup({ id, chatId }, user);
     reviewQueue.push(id);
-    serviceApi.updateQueue({ chatId }, reviewQueue);
+    serviceApi.updateReviewQueue({ chatId }, reviewQueue);
 
     reply(`Welcome to team!`);
   };
@@ -92,7 +95,7 @@ export const groupService = (api: {
     serviceApi.updateUser({ id, chatId }, { status: 'active' });
     const reviewQueue = await serviceApi.getReviewQueue({ chatId });
     reviewQueue.push(id);
-    serviceApi.updateQueue({ chatId }, reviewQueue);
+    serviceApi.updateReviewQueue({ chatId }, reviewQueue);
     reply(`You are opt in now!`);
   };
 
@@ -107,7 +110,7 @@ export const groupService = (api: {
     serviceApi.updateUser({ id, chatId }, { status: 'disable' });
     const reviewQueue = await serviceApi.getReviewQueue({ chatId });
     const filteredQueue = reviewQueue.filter(userId => userId !== id);
-    serviceApi.updateQueue({ chatId }, filteredQueue);
+    serviceApi.updateReviewQueue({ chatId }, filteredQueue);
     reply(`You are opt out now!`);
   };
 

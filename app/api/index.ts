@@ -41,7 +41,7 @@ export function addUserToGroup(apiConfig: GroupApiType, user: User): void {
   });
 }
 
-export function updateQueue(
+export function updateReviewQueue(
   apiConfig: GroupApiType,
   reviewQueue: Array<number>
 ): void {
@@ -73,46 +73,32 @@ export function updateUser(
   }
 }
 
-export async function getReviewQueue(
-  apiConfig: GroupApiType
-): Promise<Array<number>> {
-  const dbRef = ref(database);
-  const { chatId } = apiConfig;
-  let data = null;
-  try {
-    const snapshot = await get(child(dbRef, `groups/${chatId}/review_queue`));
-    console.log('snapshot', snapshot);
-    if (snapshot.exists()) {
-      console.log(snapshot.val());
-      data = snapshot.val();
-    } else {
-      console.log('No data available');
-    }
-  } catch (e) {
-    console.error(e);
-  }
-
-  return data || [];
-}
-
-export function getUser(apiConfig: GroupApiType): User | null {
-  const dbRef = ref(database);
-  const { chatId, id } = apiConfig;
-  let data = null;
-  get(child(dbRef, `groups/${chatId}/members/${id}`))
-    .then(snapshot => {
+export function getData({ path }: { path: string }): Function {
+  return async function <T>(apiConfig: GroupApiType): Promise<T> {
+    const { chatId, id = '' } = apiConfig;
+    const dbRef = ref(database);
+    const createdPath = `groups/${chatId}/${path}/${id}`;
+    let data = null;
+    try {
+      const snapshot = await get(child(dbRef, createdPath));
+      console.log('snapshot', snapshot);
       if (snapshot.exists()) {
         console.log(snapshot.val());
         data = snapshot.val();
       } else {
         console.log('No data available');
       }
-    })
-    .catch(error => {
-      console.error(error);
-    });
-  return data || null;
+    } catch (e) {
+      console.error(e);
+    }
+
+    return data;
+  };
 }
+
+export const getReviewQueue = getData({ path: 'review_queue' });
+export const getUser = getData({ path: 'members' });
+export const getUsersReview = getData({ path: 'reviews_users' });
 
 // // reviews api
 function addReview(
@@ -132,11 +118,13 @@ export const groupApi = {
   addUserToGroup,
   updateUser,
   getReviewQueue,
-  updateQueue
+  updateReviewQueue
 };
 
 export const reviewApi = {
   getReviewQueue,
   addReview,
-  getUser
+  getUser,
+  updateReviewQueue,
+  getUsersReview
 };
