@@ -1,4 +1,4 @@
-import { getData, addData, updateData } from './dbApi';
+import { getData, addData, updateData, removeData } from './dbApi';
 
 // import { doc, setDoc, getFirestore } from "firebase/firestore";
 //
@@ -86,6 +86,10 @@ export const getUser = getData({ path: 'members' });
 export const getUsersReview = getData({ path: 'reviews_users' });
 export const getReview = getData({ path: 'reviews' });
 
+// remove api
+export const removeUserReview = removeData({ path: 'reviews_users' });
+export const removeReview = removeData({ path: 'reviews' });
+
 // // reviews api
 // function addReview(
 //   apiConfig: GroupApiType,
@@ -113,5 +117,9 @@ export const reviewApi = {
   getUser,
   addReviewQueue,
   getUsersReview,
-  addUserReview
+  addUserReview,
+  updateUserReview,
+  removeUserReview,
+  removeReview,
+  getReview
 };

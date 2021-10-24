@@ -3,16 +3,30 @@ import { database } from '../config/firebase';
 import { GroupApiType } from './index';
 
 export function addData({ path }: { path: string }): Function {
-  return <T>(apiConfig: GroupApiType, params: T): void => {
+  return async <T>(apiConfig: GroupApiType, params: T): Promise<void> => {
     const { chatId, id } = apiConfig;
-    const createdPath = `groups/${chatId}/${path}/${id}`;
-    set(ref(database, createdPath), {
-      ...params
-    }).catch(err => {
+    try {
+      await set(ref(database, `groups/${chatId}/${path}/${id}`), {
+        ...params
+      });
+    } catch (err) {
       throw new TypeError(
-        `Error update ${path} with ${params} to db, err = ${err}`
+        `Error add ${path} with ${params} to db, err = ${err}`
       );
-    });
+    }
+  };
+}
+
+export function removeData({ path }: { path: string }): Function {
+  return async <T>(apiConfig: GroupApiType, params: T): Promise<void> => {
+    const { chatId, id } = apiConfig;
+    try {
+      await set(ref(database, `groups/${chatId}/${path}/${id}`), undefined);
+    } catch (err) {
+      throw new TypeError(
+        `Error remove ${path} with ${params} from db, err = ${err}`
+      );
+    }
   };
 }
 

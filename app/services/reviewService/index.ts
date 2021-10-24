@@ -8,14 +8,6 @@ import { getUserMessage } from '../../helpers/getUserMessage';
 import { parseName } from '../../helpers/tgParsers/user';
 import { GroupApiType } from '../../api';
 
-interface IReviewService {
-  setReview: Function;
-  endReview: Function;
-  checkStatus: Function;
-  checkAllStatus: Function;
-  clearAllReviews: Function;
-}
-
 type HandlerFunction = (error: any, ctx: any) => void;
 
 function handleError(
@@ -36,21 +28,30 @@ function handleError(
   }
 }
 
-export const reviewService = (api: {
-  getReviewQueue: (apiConfig: GroupApiType) => Array<number>;
-  addReview: (
+type updateUserReviewParamsType = {
+  nextUserId?: number;
+  reviewId: string;
+};
+
+interface IReviewServiceApi {
+  getReviewQueue: (apiConfig: GroupApiType) => Promise<Array<number>>;
+  addReview: (apiConfig: GroupApiType, review: Review) => Promise<void>;
+  updateUserReview: (
     apiConfig: GroupApiType,
-    review: Review,
-    userId: number,
-    order: Array<number>
-  ) => void;
-  getUser: (apiConfig: GroupApiType) => User;
+    params: updateUserReviewParamsType
+  ) => Promise<void>;
+  getUser: (apiConfig: GroupApiType) => Promise<User>;
   updateReviewQueue: (
     apiConfig: GroupApiType,
     reviewQueue: Array<number>
   ) => void;
-  getUsersReview: (apiConfig: GroupApiType) => Object;
-}): IReviewService => {
+  getUsersReview: (apiConfig: GroupApiType) => Promise<object>;
+  getReview: (apiConfig: GroupApiType) => Promise<Array<object>>;
+  removeUserReview: (apiConfig: GroupApiType) => Promise<void>;
+  removeReview: (apiConfig: GroupApiType) => Promise<void>;
+}
+
+export const reviewService = (api: IReviewServiceApi) => {
   // init api
   const serviceApi = api;
   // check tg errors
@@ -113,10 +114,9 @@ export const reviewService = (api: {
     console.log(review);
     console.log(nextUserId);
 
-    // @ts-ignore
-    await serviceApi.addReview({ id: reviewId, chatId }, review, nextUserId);
-    // TODO: add await
-    serviceApi.updateReviewQueue({ chatId }, reviewQueue);
+    await serviceApi.addReview({ id: reviewId, chatId }, review);
+    await serviceApi.updateUserReview({ chatId }, { nextUserId, reviewId });
+    await serviceApi.updateReviewQueue({ chatId }, reviewQueue);
 
     const user = await serviceApi.getUser({ chatId, id: nextUserId });
 
@@ -139,16 +139,14 @@ export const reviewService = (api: {
       reply
     } = ctx;
 
-    const reviewsMap = await serviceApi.getUsersReview({ id, chatId });
-    // TODO: dev api
-    // await serviceApi.updateUsersReview({ id, chatId }, undefined);
+    await serviceApi.removeUserReview({ id, chatId });
+    await serviceApi.removeReview({ id, chatId });
+
     const reviewQueue = await serviceApi.getReviewQueue({ chatId });
     reviewQueue.push(id);
     await serviceApi.updateReviewQueue({ chatId }, reviewQueue);
-    const user = await serviceApi.getUser({ chatId, id });
-    // TODO: dev api
-    // await serviceApi.updateReview({ id, chatId }, undefined);
 
+    const user = await serviceApi.getUser({ chatId, id });
 
     reply(`dobby if free ${parseName(user.username, user.id)}`, {
       parse_mode: 'HTML'
@@ -166,10 +164,9 @@ export const reviewService = (api: {
     const reviewsMap = await serviceApi.getUsersReview({ chatId });
     // @ts-ignore
     const reviewId = reviewsMap[id];
-    // TODO: dev api
-    // const reviews = await serviceApi.getReviews({ chatId });
-    const reviews: any[] = [];
+    const reviews = await serviceApi.getReview({ chatId });
     const review = reviews.find(item => item.id === reviewId);
+
     const user = await serviceApi.getUser({ chatId, id });
 
     let msg = `${parseName(user.username, id)}, haven't any MR to review`;
@@ -190,12 +187,8 @@ export const reviewService = (api: {
       chat: { id: chatId }
     } = ctx;
     const reviewsMap = await serviceApi.getUsersReview({ chatId });
-    // TODO: dev api
-    // const users = await serviceApi.getUsers({ chatId });
-    const users = {};
-    // TODO: dev api
-    // const reviews = await serviceApi.getReviews({ chatId });
-    const reviews = {};
+    const users = await serviceApi.getUser({ chatId });
+    const reviews = await serviceApi.getReview({ chatId });
     Object.keys(reviewsMap).forEach(userId => {
       // @ts-ignore
       const currUser = users[userId];
