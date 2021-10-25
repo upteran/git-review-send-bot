@@ -88,7 +88,8 @@ export const groupApi: IGroupServiceApi = {
   addUserToGroup,
   updateUser,
   getReviewQueue,
-  addReviewQueue
+  addReviewQueue,
+  getUsersReview
 };
 
 export const reviewApi: IReviewServiceApi = {

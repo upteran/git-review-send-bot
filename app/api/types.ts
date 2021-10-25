@@ -1,4 +1,5 @@
-import Review, { IReviewRecord } from '../models/Review';
+import Review from '../models/review/Review';
+import { IReviewRecord } from '../models/review/types';
 import User from '../models/user/User';
 import { IUserRecord, IUsersReviewRecord } from '../models/user/types';
 
@@ -19,7 +20,6 @@ export type GetReviewQueueType = GenericApiFn<undefined, Array<number>>;
 export type AddReviewType = GenericApiFn<Review, void>;
 export type AddReviewQueueType = GenericApiFn<object, void>;
 export type UpdateUserReviewType = GenericApiFn<UpdUserReviewParamsType, void>;
-export type UpdateReviewQueueType = GenericApiFn<Array<number>, void>;
 export type GetUsersReviewType = GenericApiFn<undefined, string>;
 export type GetUsersReviewListType = GenericApiFn<
   undefined,
@@ -55,6 +55,7 @@ export interface IReviewServiceApi {
 
 export interface IGroupServiceApi {
   getReviewQueue: GetReviewQueueType;
+  getUsersReview: GetUsersReviewType;
   addReviewQueue: AddReviewQueueType;
   addUserToGroup: AddUserToGroupType;
   updateUser: UpdateUserType;

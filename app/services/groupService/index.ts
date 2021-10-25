@@ -66,11 +66,17 @@ export const groupService = (api: IGroupServiceApi): IGroupService => {
       chat: { id: chatId },
       reply
     } = ctx;
-    await serviceApi.updateUser({ id, chatId }, { status: 'disable' });
-    // TODO: handle req
+    const activeReview = await serviceApi.getUsersReview({ chatId });
+
+    if (activeReview) {
+      reply(`You have got active MR, close it before out`);
+      return;
+    }
+
     const reviewQueue = (await serviceApi.getReviewQueue({ chatId })) || [];
     const filteredQueue = reviewQueue.filter(userId => userId !== id);
     await serviceApi.addReviewQueue({ chatId }, filteredQueue);
+    await serviceApi.updateUser({ id, chatId }, { status: 'disable' });
     reply(`You are opt out now!`);
   };
 
