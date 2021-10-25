@@ -38,14 +38,13 @@ export function getData({ path }: { path: string }): GenericApiFn<any, any> {
     let data = null;
     try {
       const snapshot = await get(child(dbRef, createdPath));
-      console.log('snapshot', snapshot);
       if (snapshot.exists()) {
-        console.log(snapshot.val());
         data = snapshot.val();
       } else {
         console.log('No data available');
       }
     } catch (e) {
+      // TODO: add Error
       console.error(e);
     }
 

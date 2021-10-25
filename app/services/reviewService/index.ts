@@ -6,55 +6,15 @@ import Review from '../../models/Review';
 import { getUserMessage } from '../../helpers/getUserMessage';
 import { parseName } from '../../helpers/tgParsers/user';
 import { IReviewServiceApi } from '../../api/types';
+import { chatErrorHandlerDecorator } from '../../helpers/errorHandler';
 
-type HandlerFunction = (error: any, ctx: any) => void;
-
-function handleError(
-  ctx: any,
-  errorClass: any,
-  handler: HandlerFunction,
-  error: any
-) {
-  // check if error is instance of passed error class
-  if (typeof handler === 'function' && error instanceof errorClass) {
-    // run handler with error object
-    // and class context as second argument
-    handler.call(null, error, ctx);
-  } else {
-    // throw error further,
-    // next decorator in chain can catch it
-    throw error;
-  }
-}
+const errorCb = (name: string) => (e: any) => {
+  console.error(`error handler log ${name}`, e);
+};
 
 export const reviewService = (api: IReviewServiceApi) => {
   // init api
   const serviceApi = api;
-  // check tg errors
-  const errorHandlerDecorator =
-    (errorClass: any, handler: HandlerFunction) =>
-    // eslint-disable-next-line @typescript-eslint/ban-types
-    (fn: Function) =>
-    async (ctx: TelegrafContext) => {
-      try {
-        if (!ctx.from) throw new Error('No `from` field found on context');
-        if (!ctx.chat) throw new Error('No `chat` field found on context');
-        console.log('RUN');
-        const result = fn(ctx);
-        if (
-          result &&
-          typeof result.then === 'function' &&
-          typeof result.catch === 'function'
-        ) {
-          // return promise
-          return result.catch((error: any) => {
-            handleError(this, errorClass, handler, error);
-          });
-        }
-      } catch (e) {
-        console.error('handle error', e);
-      }
-    };
 
   const setReview = async (ctx: TelegrafContext) => {
     const {
@@ -193,20 +153,25 @@ export const reviewService = (api: IReviewServiceApi) => {
   };
 
   return {
-    setReview: errorHandlerDecorator(Error, e =>
-      console.log('error setReview', e)
+    setReview: chatErrorHandlerDecorator(
+      Error,
+      errorCb('setReview')
     )(setReview),
-    endReview: errorHandlerDecorator(Error, e =>
-      console.log('error endReview', e)
+    endReview: chatErrorHandlerDecorator(
+      Error,
+      errorCb('endReview')
     )(endReview),
-    checkStatus: errorHandlerDecorator(Error, e =>
-      console.log('error checkStatus', e)
+    checkStatus: chatErrorHandlerDecorator(
+      Error,
+      errorCb('checkStatus')
     )(checkStatus),
-    checkAllStatus: errorHandlerDecorator(Error, e =>
-      console.log('error checkAllStatus', e)
+    checkAllStatus: chatErrorHandlerDecorator(
+      Error,
+      errorCb('checkAllStatus')
     )(checkAllStatus),
-    clearAllReviews: errorHandlerDecorator(Error, e =>
-      console.log('error clearAllReviews', e)
+    clearAllReviews: chatErrorHandlerDecorator(
+      Error,
+      errorCb('clearAllReviews')
     )(clearAllReviews)
   };
 };
