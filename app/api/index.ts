@@ -10,9 +10,6 @@ import {
   RemoveReviewType
 } from './types';
 
-// import { doc, setDoc, getFirestore } from "firebase/firestore";
-//
-// const db = getFirestore();
 /**
  * members: {
  *   ids: [],
@@ -25,45 +22,54 @@ import {
  *   ids: [],
  *   list: {}
  * };
- * users_review: {
+ * reviews_users: {
  *   userID: reviewId
  * }
  *
  * */
+const endpoints = {
+  REVIEW_QUEUE: 'review_queue',
+  MEMBERS: 'members',
+  REVIEWS: 'reviews',
+  USERS_REVIEW: 'reviews_users'
+};
 
-// add api
-export const addReviewQueue = addData({ path: 'review_queue' });
-export const addUserToGroup = addData({ path: 'members' });
-export const addReview: AddReviewType = addData({
-  path: 'reviews'
-});
-export const addUserReview = addData({ path: 'users_reviews' });
-
-// update api
-export const updateUser = updateData({ path: 'members' });
-export const updateReview = updateData({ path: 'reviews' });
-export const updateUserReview: UpdateUserReviewType = updateData({
-  path: 'users_reviews'
-});
-
-// get api
+// review_queue
+export const addReviewQueue = addData({ path: endpoints.REVIEW_QUEUE });
 export const getReviewQueue: GetReviewQueueType = getData({
-  path: 'review_queue'
+  path: endpoints.REVIEW_QUEUE
 });
 
-export const getUser: GetUserType = getData({ path: 'members' });
-export const getUsersList: GetUserType = getData({ path: 'members' });
+// members
+export const addUserToGroup = addData({ path: endpoints.MEMBERS });
+export const updateUser = updateData({ path: endpoints.MEMBERS });
+export const getUser: GetUserType = getData({ path: endpoints.MEMBERS });
+export const getUsersList: GetUserType = getData({ path: endpoints.MEMBERS });
+
+// reviews
+export const addReview: AddReviewType = addData({
+  path: endpoints.REVIEWS
+});
+export const updateReview = updateData({ path: endpoints.REVIEWS });
+export const getReview: GetReviewType = getData({ path: endpoints.REVIEWS });
+export const getReviewsList: GetReviewType = getData({
+  path: endpoints.REVIEWS
+});
+export const removeReview: RemoveReviewType = removeData({
+  path: endpoints.REVIEWS
+});
+
+// users_reviews
+export const addUserReview = addData({ path: endpoints.USERS_REVIEW });
+export const updateUserReview: UpdateUserReviewType = updateData({
+  path: endpoints.USERS_REVIEW
+});
 export const getUsersReview: GetUsersReviewType = getData({
-  path: 'reviews_users'
+  path: endpoints.USERS_REVIEW
 });
-export const getReview: GetReviewType = getData({ path: 'reviews' });
-export const getReviewsList: GetReviewType = getData({ path: 'reviews' });
-
-// remove api
 export const removeUserReview: RemoveUserReviewType = removeData({
-  path: 'reviews_users'
+  path: endpoints.USERS_REVIEW
 });
-export const removeReview: RemoveReviewType = removeData({ path: 'reviews' });
 
 export const groupApi = {
   addUserToGroup,
