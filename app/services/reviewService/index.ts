@@ -65,7 +65,7 @@ export const reviewService = (api: IReviewServiceApi) => {
       message,
       reply
     } = ctx;
-    const reviewId = nanoid();
+
     const msg = getUserMessage(message);
 
     if (!msg || !msg.length) {
@@ -75,20 +75,19 @@ export const reviewService = (api: IReviewServiceApi) => {
 
     console.log('user msg', msg);
 
-    // ts-ignore
     const reviewQueue = await serviceApi.getReviewQueue({ chatId });
-    console.log('review_order', reviewQueue);
-    if (!reviewQueue.length) {
+    console.log('reviewQueue', reviewQueue);
+    if (!reviewQueue || !reviewQueue.length) {
       return reply('Everybody busy');
       return;
     }
 
+    const reviewId = nanoid();
     const review = new Review(reviewId, msg, authorId);
-
     const nextUserId = reviewQueue.shift();
 
-    console.log(review);
-    console.log(nextUserId);
+    console.log('review', review);
+    console.log('nextUserId', nextUserId);
 
     await serviceApi.addReview({ id: reviewId, chatId }, review);
     await serviceApi.updateUserReview({ chatId }, { nextUserId, reviewId });
@@ -138,13 +137,9 @@ export const reviewService = (api: IReviewServiceApi) => {
       reply
     } = ctx;
     const reviewsMap = await serviceApi.getUsersReview({ chatId });
-    // @ts-ignore
-    const reviewId = reviewsMap[id];
-    const reviews = await serviceApi.getReviewsList({ chatId });
 
-    const review = Object.keys(reviews).find(
-      key => reviews[key]?.id === reviewId
-    );
+    const reviewId = reviewsMap[id];
+    const review = await serviceApi.getReview({ id: reviewId, chatId });
 
     const user = await serviceApi.getUser({ chatId, id });
 
@@ -166,14 +161,12 @@ export const reviewService = (api: IReviewServiceApi) => {
       chat: { id: chatId }
     } = ctx;
     const reviewsMap = await serviceApi.getUsersReview({ chatId });
-    const users = await serviceApi.getUser({ chatId });
+    const users = await serviceApi.getUsersList({ chatId });
     const reviews = await serviceApi.getReviewsList({ chatId });
     Object.keys(reviewsMap).forEach(userId => {
-      // @ts-ignore
       const currUser = users[userId];
-      // @ts-ignore
       const currReview = reviews[reviewsMap[userId]];
-      if (currUser) {
+      if (currReview) {
         ctx.reply(`${parseName(currUser.username, id)}: MR - ${currReview}`, {
           parse_mode: 'HTML'
         });
@@ -190,8 +183,6 @@ export const reviewService = (api: IReviewServiceApi) => {
 
   const clearAllReviews = async (ctx: TelegrafContext) => {
     const {
-      // @ts-ignore
-      from: { id },
       // @ts-ignore
       chat: { id: chatId },
       reply

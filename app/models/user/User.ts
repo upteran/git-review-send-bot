@@ -1,8 +1,4 @@
-import { escape } from '../helpers/escapeMarkdown';
-
-export interface IUserRecord {
-  [key: string]: User;
-}
+import { escape } from '../../helpers/escapeMarkdown';
 /**
  * Entity to represent a telegram user.
  */

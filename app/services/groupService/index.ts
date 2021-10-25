@@ -1,6 +1,6 @@
 import { TelegrafContext } from 'telegraf/typings/context';
-import User from '../../models/User';
-import { GroupApiType } from '../../api';
+import User from '../../models/user/User';
+import { GroupApiType } from '../../api/types';
 
 interface IGroupService {
   registrationUser: Function;
