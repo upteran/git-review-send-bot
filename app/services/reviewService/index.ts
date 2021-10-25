@@ -3,10 +3,9 @@ import { TelegrafContext } from 'telegraf/typings/context';
 import { nanoid } from 'nanoid';
 
 import Review from '../../models/Review';
-import User from '../../models/User';
 import { getUserMessage } from '../../helpers/getUserMessage';
 import { parseName } from '../../helpers/tgParsers/user';
-import { GroupApiType } from '../../api';
+import { IReviewServiceApi } from '../../api/types';
 
 type HandlerFunction = (error: any, ctx: any) => void;
 
@@ -26,29 +25,6 @@ function handleError(
     // next decorator in chain can catch it
     throw error;
   }
-}
-
-type updateUserReviewParamsType = {
-  nextUserId?: number;
-  reviewId: string;
-};
-
-interface IReviewServiceApi {
-  getReviewQueue: (apiConfig: GroupApiType) => Promise<Array<number>>;
-  addReview: (apiConfig: GroupApiType, review: Review) => Promise<void>;
-  updateUserReview: (
-    apiConfig: GroupApiType,
-    params: updateUserReviewParamsType
-  ) => Promise<void>;
-  getUser: (apiConfig: GroupApiType) => Promise<User>;
-  updateReviewQueue: (
-    apiConfig: GroupApiType,
-    reviewQueue: Array<number>
-  ) => void;
-  getUsersReview: (apiConfig: GroupApiType) => Promise<object>;
-  getReview: (apiConfig: GroupApiType) => Promise<Array<object>>;
-  removeUserReview: (apiConfig: GroupApiType) => Promise<void>;
-  removeReview: (apiConfig: GroupApiType) => Promise<void>;
 }
 
 export const reviewService = (api: IReviewServiceApi) => {
@@ -164,8 +140,11 @@ export const reviewService = (api: IReviewServiceApi) => {
     const reviewsMap = await serviceApi.getUsersReview({ chatId });
     // @ts-ignore
     const reviewId = reviewsMap[id];
-    const reviews = await serviceApi.getReview({ chatId });
-    const review = reviews.find(item => item.id === reviewId);
+    const reviews = await serviceApi.getReviewsList({ chatId });
+
+    const review = Object.keys(reviews).find(
+      key => reviews[key]?.id === reviewId
+    );
 
     const user = await serviceApi.getUser({ chatId, id });
 
@@ -188,7 +167,7 @@ export const reviewService = (api: IReviewServiceApi) => {
     } = ctx;
     const reviewsMap = await serviceApi.getUsersReview({ chatId });
     const users = await serviceApi.getUser({ chatId });
-    const reviews = await serviceApi.getReview({ chatId });
+    const reviews = await serviceApi.getReviewsList({ chatId });
     Object.keys(reviewsMap).forEach(userId => {
       // @ts-ignore
       const currUser = users[userId];
@@ -214,11 +193,12 @@ export const reviewService = (api: IReviewServiceApi) => {
       // @ts-ignore
       from: { id },
       // @ts-ignore
-      chat: { id: chatId }
+      chat: { id: chatId },
+      reply
     } = ctx;
-    // clear user_review table
-    // clear reviews
-    // show msgs
+    await serviceApi.removeUserReview({ chatId });
+    await serviceApi.removeReview({ chatId });
+    reply('All reviews are cleared!');
   };
 
   return {

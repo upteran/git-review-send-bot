@@ -1,4 +1,14 @@
 import { getData, addData, updateData, removeData } from './dbApi';
+import {
+  GetReviewQueueType,
+  AddReviewType,
+  UpdateUserReviewType,
+  GetUsersReviewType,
+  GetReviewType,
+  GetUserType,
+  RemoveUserReviewType,
+  RemoveReviewType
+} from './types';
 
 // import { doc, setDoc, getFirestore } from "firebase/firestore";
 //
@@ -21,88 +31,39 @@ import { getData, addData, updateData, removeData } from './dbApi';
  *
  * */
 
-export type GroupApiType = {
-  id?: number | string;
-  chatId: number;
-};
-
-// export function addUserToGroup(apiConfig: GroupApiType, user: User): void {
-//   const { id, chatId } = apiConfig;
-//   console.log('user', {
-//     ...user.params
-//   });
-//   set(ref(database, `groups/${chatId}/members/${id}`), {
-//     ...user.params
-//   }).catch(err => {
-//     throw new TypeError(`Error set user to db, err = ${err}`);
-//   });
-// }
-
 // add api
 export const addReviewQueue = addData({ path: 'review_queue' });
 export const addUserToGroup = addData({ path: 'members' });
-export const addReview = addData({ path: 'reviews' });
+export const addReview: AddReviewType = addData({
+  path: 'reviews'
+});
 export const addUserReview = addData({ path: 'users_reviews' });
-
-// export function updateReviewQueue(
-//   apiConfig: GroupApiType,
-//   reviewQueue: Array<number>
-// ): void {
-//   const { chatId } = apiConfig;
-//   set(ref(database, `groups/${chatId}/review_queue/`), reviewQueue).catch(
-//     err => {
-//       throw new TypeError(`Error set user to db, err = ${err}`);
-//     }
-//   );
-// }
 
 // update api
 export const updateUser = updateData({ path: 'members' });
 export const updateReview = updateData({ path: 'reviews' });
-export const updateUserReview = updateData({ path: 'users_reviews' });
-// export function updateUser(
-//   apiConfig: GroupApiType,
-//   params: object
-// ): Promise<void> {
-//   const { id, chatId } = apiConfig;
-//   if (!params) {
-//     throw new TypeError('Error user update, params to update not exists');
-//   }
-//   try {
-//     const updates = {};
-//     Object.keys(params).forEach(key => {
-//       // @ts-ignore
-//       updates[`groups/${chatId}/members/${id}/${key}`] = params[key];
-//     });
-//     return update(ref(database), updates);
-//   } catch (e) {
-//     throw TypeError(`Error on user update, error msg = ${e}`);
-//   }
-// }
+export const updateUserReview: UpdateUserReviewType = updateData({
+  path: 'users_reviews'
+});
 
 // get api
-export const getReviewQueue = getData({ path: 'review_queue' });
-export const getUser = getData({ path: 'members' });
-export const getUsersReview = getData({ path: 'reviews_users' });
-export const getReview = getData({ path: 'reviews' });
+export const getReviewQueue: GetReviewQueueType = getData({
+  path: 'review_queue'
+});
+
+export const getUser: GetUserType = getData({ path: 'members' });
+export const getUsersList: GetUserType = getData({ path: 'members' });
+export const getUsersReview: GetUsersReviewType = getData({
+  path: 'reviews_users'
+});
+export const getReview: GetReviewType = getData({ path: 'reviews' });
+export const getReviewsList: GetReviewType = getData({ path: 'reviews' });
 
 // remove api
-export const removeUserReview = removeData({ path: 'reviews_users' });
-export const removeReview = removeData({ path: 'reviews' });
-
-// // reviews api
-// function addReview(
-//   apiConfig: GroupApiType,
-//   review: Review,
-//   userId: number
-// ): void {
-//   const { id, chatId } = apiConfig;
-//   set(ref(database, `groups/${chatId}/reviews/${id}`), {
-//     ...review.params
-//   });
-//
-//   set(ref(database, `groups/${chatId}/users_reviews/${userId}`), review.id);
-// }
+export const removeUserReview: RemoveUserReviewType = removeData({
+  path: 'reviews_users'
+});
+export const removeReview: RemoveReviewType = removeData({ path: 'reviews' });
 
 export const groupApi = {
   addUserToGroup,
@@ -121,5 +82,7 @@ export const reviewApi = {
   updateUserReview,
   removeUserReview,
   removeReview,
-  getReview
+  getReview,
+  getUsersList,
+  getReviewsList
 };

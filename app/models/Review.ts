@@ -1,5 +1,9 @@
 import { escape } from '../helpers/escapeMarkdown';
 
+export interface IReviewRecord {
+  [key: string]: Review;
+}
+
 /**
  * Entity to represent a telegram user.
  */

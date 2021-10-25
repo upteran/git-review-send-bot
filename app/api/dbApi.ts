@@ -1,8 +1,8 @@
 import { ref, set, get, child, update } from 'firebase/database';
 import { database } from '../config/firebase';
-import { GroupApiType } from './index';
+import { GroupApiType, GenericApiFn } from './types';
 
-export function addData({ path }: { path: string }): Function {
+export function addData({ path }: { path: string }): GenericApiFn<any, any> {
   return async <T>(apiConfig: GroupApiType, params: T): Promise<void> => {
     const { chatId, id } = apiConfig;
     try {
@@ -17,7 +17,7 @@ export function addData({ path }: { path: string }): Function {
   };
 }
 
-export function removeData({ path }: { path: string }): Function {
+export function removeData({ path }: { path: string }): GenericApiFn<any, any> {
   return async <T>(apiConfig: GroupApiType, params: T): Promise<void> => {
     const { chatId, id } = apiConfig;
     try {
@@ -30,7 +30,7 @@ export function removeData({ path }: { path: string }): Function {
   };
 }
 
-export function getData({ path }: { path: string }): Function {
+export function getData({ path }: { path: string }): GenericApiFn<any, any> {
   return async function <T>(apiConfig: GroupApiType): Promise<T> {
     const { chatId, id = '' } = apiConfig;
     const dbRef = ref(database);
@@ -53,7 +53,7 @@ export function getData({ path }: { path: string }): Function {
   };
 }
 
-export function updateData({ path }: { path: string }): Function {
+export function updateData({ path }: { path: string }): GenericApiFn<any, any> {
   return function <T>(apiConfig: GroupApiType, params: T): Promise<void> {
     const { id, chatId } = apiConfig;
     if (!params) {
