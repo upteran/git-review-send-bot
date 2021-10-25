@@ -1,6 +1,6 @@
 import { TelegrafContext } from 'telegraf/typings/context';
 import User from '../../models/user/User';
-import { GroupApiType } from '../../api/types';
+import { IGroupServiceApi } from '../../api/types';
 import { chatErrorHandlerDecorator } from '../../helpers/errorHandler';
 
 interface IGroupService {
@@ -13,15 +13,7 @@ const errorCb = (name: string) => (e: any) => {
   console.error(`error handler log ${name}`, e);
 };
 
-export const groupService = (api: {
-  getReviewQueue: (apiConfig: GroupApiType) => Array<number>;
-  addUserToGroup: (apiConfig: GroupApiType, user: User) => void;
-  updateUser: (apiConfig: GroupApiType, params: object) => void;
-  updateReviewQueue: (
-    apiConfig: GroupApiType,
-    reviewQueue: Array<number>
-  ) => void;
-}): IGroupService => {
+export const groupService = (api: IGroupServiceApi): IGroupService => {
   // init api
   const serviceApi = api;
 
@@ -34,13 +26,16 @@ export const groupService = (api: {
       reply
     } = ctx;
 
+    // TODO: add check to registr before user
     const user = new User(id, username || first_name);
-    const reviewQueue = await serviceApi.getReviewQueue({ chatId });
-    console.log('registrationUser', reviewQueue);
+    const reviewQueue = (await serviceApi.getReviewQueue({ chatId })) || [];
 
-    serviceApi.addUserToGroup({ id, chatId }, user);
-    reviewQueue.push(id);
-    serviceApi.updateReviewQueue({ chatId }, reviewQueue);
+    await serviceApi.addUserToGroup({ id, chatId }, user);
+    // TODO: realize Map collection
+    if (!reviewQueue.includes(id)) {
+      reviewQueue.push(id);
+    }
+    await serviceApi.addReviewQueue({ chatId }, reviewQueue);
 
     reply(`Welcome to team!`);
   };
@@ -53,10 +48,13 @@ export const groupService = (api: {
       chat: { id: chatId },
       reply
     } = ctx;
-    serviceApi.updateUser({ id, chatId }, { status: 'active' });
-    const reviewQueue = await serviceApi.getReviewQueue({ chatId });
-    reviewQueue.push(id);
-    serviceApi.updateReviewQueue({ chatId }, reviewQueue);
+    await serviceApi.updateUser({ id, chatId }, { status: 'active' });
+    const reviewQueue = (await serviceApi.getReviewQueue({ chatId })) || [];
+    // TODO: realize Map collection
+    if (!reviewQueue.includes(id)) {
+      reviewQueue.push(id);
+    }
+    await serviceApi.addReviewQueue({ chatId }, reviewQueue);
     reply(`You are opt in now!`);
   };
 
@@ -68,10 +66,11 @@ export const groupService = (api: {
       chat: { id: chatId },
       reply
     } = ctx;
-    serviceApi.updateUser({ id, chatId }, { status: 'disable' });
-    const reviewQueue = await serviceApi.getReviewQueue({ chatId });
+    await serviceApi.updateUser({ id, chatId }, { status: 'disable' });
+    // TODO: handle req
+    const reviewQueue = (await serviceApi.getReviewQueue({ chatId })) || [];
     const filteredQueue = reviewQueue.filter(userId => userId !== id);
-    serviceApi.updateReviewQueue({ chatId }, filteredQueue);
+    await serviceApi.addReviewQueue({ chatId }, filteredQueue);
     reply(`You are opt out now!`);
   };
 

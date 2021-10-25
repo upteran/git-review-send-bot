@@ -1,14 +1,13 @@
 import { ref, set, get, child, update } from 'firebase/database';
 import { database } from '../config/firebase';
-import { GroupApiType, GenericApiFn } from './types';
+import { GroupApiType } from './types';
 
-export function addData({ path }: { path: string }): GenericApiFn<any, any> {
+export function addData({ path }: { path: string }) {
   return async <T>(apiConfig: GroupApiType, params: T): Promise<void> => {
-    const { chatId, id } = apiConfig;
+    const { chatId, id = '' } = apiConfig;
     try {
-      await set(ref(database, `groups/${chatId}/${path}/${id}`), {
-        ...params
-      });
+      console.log(`${path} path`, params);
+      await set(ref(database, `groups/${chatId}/${path}/${id}`), params);
     } catch (err) {
       throw new TypeError(
         `Error add ${path} with ${params} to db, err = ${err}`
@@ -17,11 +16,11 @@ export function addData({ path }: { path: string }): GenericApiFn<any, any> {
   };
 }
 
-export function removeData({ path }: { path: string }): GenericApiFn<any, any> {
+export function removeData({ path }: { path: string }) {
   return async <T>(apiConfig: GroupApiType, params: T): Promise<void> => {
     const { chatId, id } = apiConfig;
     try {
-      await set(ref(database, `groups/${chatId}/${path}/${id}`), undefined);
+      await set(ref(database, `groups/${chatId}/${path}/${id}`), null);
     } catch (err) {
       throw new TypeError(
         `Error remove ${path} with ${params} from db, err = ${err}`
@@ -30,11 +29,12 @@ export function removeData({ path }: { path: string }): GenericApiFn<any, any> {
   };
 }
 
-export function getData({ path }: { path: string }): GenericApiFn<any, any> {
+export function getData({ path }: { path: string }) {
   return async function <T>(apiConfig: GroupApiType): Promise<T> {
     const { chatId, id = '' } = apiConfig;
     const dbRef = ref(database);
     const createdPath = `groups/${chatId}/${path}/${id}`;
+    // TODO: add default return value
     let data = null;
     try {
       const snapshot = await get(child(dbRef, createdPath));
@@ -52,7 +52,7 @@ export function getData({ path }: { path: string }): GenericApiFn<any, any> {
   };
 }
 
-export function updateData({ path }: { path: string }): GenericApiFn<any, any> {
+export function updateData({ path }: { path: string }) {
   return function <T>(apiConfig: GroupApiType, params: T): Promise<void> {
     const { id, chatId } = apiConfig;
     if (!params) {

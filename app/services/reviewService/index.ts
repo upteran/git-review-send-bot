@@ -4,7 +4,7 @@ import { nanoid } from 'nanoid';
 
 import Review from '../../models/Review';
 import { getUserMessage } from '../../helpers/getUserMessage';
-import { parseName } from '../../helpers/tgParsers/user';
+import { parseName, parseHtmlName } from '../../helpers/tgParsers/user';
 import { IReviewServiceApi } from '../../api/types';
 import { chatErrorHandlerDecorator } from '../../helpers/errorHandler';
 
@@ -33,10 +33,8 @@ export const reviewService = (api: IReviewServiceApi) => {
       return;
     }
 
-    console.log('user msg', msg);
-
     const reviewQueue = await serviceApi.getReviewQueue({ chatId });
-    console.log('reviewQueue', reviewQueue);
+
     if (!reviewQueue || !reviewQueue.length) {
       return reply('Everybody busy');
       return;
@@ -46,17 +44,14 @@ export const reviewService = (api: IReviewServiceApi) => {
     const review = new Review(reviewId, msg, authorId);
     const nextUserId = reviewQueue.shift();
 
-    console.log('review', review);
-    console.log('nextUserId', nextUserId);
-
     await serviceApi.addReview({ id: reviewId, chatId }, review);
-    await serviceApi.updateUserReview({ chatId }, { nextUserId, reviewId });
-    await serviceApi.updateReviewQueue({ chatId }, reviewQueue);
+    await serviceApi.addUserReview({ id: authorId, chatId }, reviewId);
+    await serviceApi.addReviewQueue({ chatId }, reviewQueue);
 
     const user = await serviceApi.getUser({ chatId, id: nextUserId });
 
     reply(
-      `${parseName(user.username, user.id)}, you got merge request: ${
+      `${parseHtmlName(user.username, user.id)}, you got merge request: ${
         review.msg
       }`,
       {
@@ -74,16 +69,21 @@ export const reviewService = (api: IReviewServiceApi) => {
       reply
     } = ctx;
 
-    await serviceApi.removeUserReview({ id, chatId });
-    await serviceApi.removeReview({ id, chatId });
+    const userReviewId = await serviceApi.getUsersReview({ id, chatId });
 
-    const reviewQueue = await serviceApi.getReviewQueue({ chatId });
-    reviewQueue.push(id);
-    await serviceApi.updateReviewQueue({ chatId }, reviewQueue);
+    await serviceApi.removeUserReview({ id, chatId });
+    // @ts-ignore
+    await serviceApi.removeReview({ id: userReviewId, chatId });
+
+    const reviewQueue = (await serviceApi.getReviewQueue({ chatId })) || [];
+    if (!reviewQueue.includes(id)) {
+      reviewQueue.push(id);
+    }
+    await serviceApi.addReviewQueue({ chatId }, reviewQueue);
 
     const user = await serviceApi.getUser({ chatId, id });
 
-    reply(`dobby if free ${parseName(user.username, user.id)}`, {
+    reply(`dobby if free ${parseHtmlName(user.username, user.id)}`, {
       parse_mode: 'HTML'
     });
   };
@@ -96,16 +96,15 @@ export const reviewService = (api: IReviewServiceApi) => {
       chat: { id: chatId },
       reply
     } = ctx;
-    const reviewsMap = await serviceApi.getUsersReview({ chatId });
-
-    const reviewId = reviewsMap[id];
+    const reviewId = await serviceApi.getUsersReview({ id, chatId });
     const review = await serviceApi.getReview({ id: reviewId, chatId });
-
     const user = await serviceApi.getUser({ chatId, id });
 
     let msg = `${parseName(user.username, id)}, haven't any MR to review`;
     if (review) {
-      msg = `${parseName(user.username, id)}, [you have active MR to review]()`;
+      msg = `${parseName(user.username, id)}, [you have active MR to review = ${
+        review.msg
+      }]`;
     }
 
     reply(msg, {
@@ -118,21 +117,30 @@ export const reviewService = (api: IReviewServiceApi) => {
       // @ts-ignore
       from: { id },
       // @ts-ignore
-      chat: { id: chatId }
+      chat: { id: chatId },
+      reply
     } = ctx;
-    const reviewsMap = await serviceApi.getUsersReview({ chatId });
+    const reviewsMap = await serviceApi.getUsersReviewList({ chatId });
+
+    if (!reviewsMap) {
+      reply('All users are available');
+      return;
+    }
     const users = await serviceApi.getUsersList({ chatId });
     const reviews = await serviceApi.getReviewsList({ chatId });
     Object.keys(reviewsMap).forEach(userId => {
       const currUser = users[userId];
       const currReview = reviews[reviewsMap[userId]];
       if (currReview) {
-        ctx.reply(`${parseName(currUser.username, id)}: MR - ${currReview}`, {
-          parse_mode: 'HTML'
-        });
+        reply(
+          `${parseHtmlName(currUser.username, id)}: MR - ${currReview.msg}`,
+          {
+            parse_mode: 'HTML'
+          }
+        );
       } else {
-        ctx.reply(
-          `${parseName(currUser.username, id)}: need review something`,
+        reply(
+          `${parseHtmlName(currUser.username, id)}: need review something`,
           {
             parse_mode: 'HTML'
           }
@@ -141,16 +149,16 @@ export const reviewService = (api: IReviewServiceApi) => {
     });
   };
 
-  const clearAllReviews = async (ctx: TelegrafContext) => {
-    const {
-      // @ts-ignore
-      chat: { id: chatId },
-      reply
-    } = ctx;
-    await serviceApi.removeUserReview({ chatId });
-    await serviceApi.removeReview({ chatId });
-    reply('All reviews are cleared!');
-  };
+  // const clearAllReviews = async (ctx: TelegrafContext) => {
+  //   const {
+  //     // @ts-ignore
+  //     chat: { id: chatId },
+  //     reply
+  //   } = ctx;
+  //   await serviceApi.removeUserReview({ chatId });
+  //   await serviceApi.removeReview({ chatId });
+  //   reply('All reviews are cleared!');
+  // };
 
   return {
     setReview: chatErrorHandlerDecorator(
@@ -168,10 +176,10 @@ export const reviewService = (api: IReviewServiceApi) => {
     checkAllStatus: chatErrorHandlerDecorator(
       Error,
       errorCb('checkAllStatus')
-    )(checkAllStatus),
-    clearAllReviews: chatErrorHandlerDecorator(
-      Error,
-      errorCb('clearAllReviews')
-    )(clearAllReviews)
+    )(checkAllStatus)
+    // clearAllReviews: chatErrorHandlerDecorator(
+    //   Error,
+    //   errorCb('clearAllReviews')
+    // )(clearAllReviews)
   };
 };

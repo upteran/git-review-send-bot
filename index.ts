@@ -13,9 +13,7 @@ const bot = new Telegraf(config.telegramApiKey, {
   username: config.botUsername
 });
 
-// @ts-ignore
 const group = groupService(groupApi);
-// @ts-ignore
 const review = reviewService(reviewApi);
 
 const list = [
@@ -34,26 +32,22 @@ const list = [
   {
     name: 'review',
     cb: review.setReview
+  },
+  {
+    name: 'end_review',
+    cb: review.endReview
+  },
+  {
+    name: 'check_status',
+    cb: review.checkStatus
+  },
+  {
+    name: 'check_all',
+    cb: review.checkAllStatus
   }
   // {
-  //   name: 'end_review',
-  //   cb: reviewService.endReview
-  // },
-  // {
-  //   name: 'check',
-  //   cb: reviewService.checkStatus
-  // },
-  // {
-  //   name: 'check_all',
-  //   cb: reviewService.checkAllStatus
-  // },
-  // {
   //   name: 'clear_all',
-  //   cb: reviewService.clearAllReviews
-  // },
-  // {
-  //   name: 'clear',
-  //   cb: reviewService.clearUserReview
+  //   cb: review.clearAllReviews
   // }
 ];
 

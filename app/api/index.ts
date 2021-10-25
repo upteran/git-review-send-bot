@@ -6,8 +6,13 @@ import {
   GetUsersReviewType,
   GetReviewType,
   GetUserType,
+  GetUsersListType,
+  GetReviewsListType,
   RemoveUserReviewType,
-  RemoveReviewType
+  RemoveReviewType,
+  GetUsersReviewListType,
+  IGroupServiceApi,
+  IReviewServiceApi
 } from './types';
 
 /**
@@ -39,12 +44,17 @@ export const addReviewQueue = addData({ path: endpoints.REVIEW_QUEUE });
 export const getReviewQueue: GetReviewQueueType = getData({
   path: endpoints.REVIEW_QUEUE
 });
+export const updateReviewQueue: GetReviewQueueType = getData({
+  path: endpoints.REVIEW_QUEUE
+});
 
 // members
 export const addUserToGroup = addData({ path: endpoints.MEMBERS });
 export const updateUser = updateData({ path: endpoints.MEMBERS });
 export const getUser: GetUserType = getData({ path: endpoints.MEMBERS });
-export const getUsersList: GetUserType = getData({ path: endpoints.MEMBERS });
+export const getUsersList: GetUsersListType = getData({
+  path: endpoints.MEMBERS
+});
 
 // reviews
 export const addReview: AddReviewType = addData({
@@ -52,7 +62,7 @@ export const addReview: AddReviewType = addData({
 });
 export const updateReview = updateData({ path: endpoints.REVIEWS });
 export const getReview: GetReviewType = getData({ path: endpoints.REVIEWS });
-export const getReviewsList: GetReviewType = getData({
+export const getReviewsList: GetReviewsListType = getData({
   path: endpoints.REVIEWS
 });
 export const removeReview: RemoveReviewType = removeData({
@@ -67,18 +77,21 @@ export const updateUserReview: UpdateUserReviewType = updateData({
 export const getUsersReview: GetUsersReviewType = getData({
   path: endpoints.USERS_REVIEW
 });
+export const getUsersReviewList: GetUsersReviewListType = getData({
+  path: endpoints.USERS_REVIEW
+});
 export const removeUserReview: RemoveUserReviewType = removeData({
   path: endpoints.USERS_REVIEW
 });
 
-export const groupApi = {
+export const groupApi: IGroupServiceApi = {
   addUserToGroup,
   updateUser,
   getReviewQueue,
   addReviewQueue
 };
 
-export const reviewApi = {
+export const reviewApi: IReviewServiceApi = {
   getReviewQueue,
   addReview,
   getUser,
@@ -90,5 +103,6 @@ export const reviewApi = {
   removeReview,
   getReview,
   getUsersList,
-  getReviewsList
+  getReviewsList,
+  getUsersReviewList
 };

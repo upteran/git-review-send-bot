@@ -8,8 +8,7 @@ export type GroupApiType = {
 };
 
 type UpdUserReviewParamsType = {
-  nextUserId?: number;
-  reviewId: string;
+  [key: string]: number;
 };
 
 export interface GenericApiFn<T, R> {
@@ -17,27 +16,46 @@ export interface GenericApiFn<T, R> {
 }
 
 export type GetReviewQueueType = GenericApiFn<undefined, Array<number>>;
-export type AddReviewType = GenericApiFn<Review, Array<void>>;
+export type AddReviewType = GenericApiFn<Review, void>;
+export type AddReviewQueueType = GenericApiFn<object, void>;
 export type UpdateUserReviewType = GenericApiFn<UpdUserReviewParamsType, void>;
 export type UpdateReviewQueueType = GenericApiFn<Array<number>, void>;
-export type GetUsersReviewType = GenericApiFn<undefined, IUsersReviewRecord>;
+export type GetUsersReviewType = GenericApiFn<undefined, string>;
+export type GetUsersReviewListType = GenericApiFn<
+  undefined,
+  IUsersReviewRecord
+>;
 export type GetReviewType = GenericApiFn<undefined, Review>;
 export type GetReviewsListType = GenericApiFn<undefined, IReviewRecord>;
 export type GetUserType = GenericApiFn<undefined, User>;
 export type GetUsersListType = GenericApiFn<undefined, IUserRecord>;
 export type RemoveUserReviewType = GenericApiFn<undefined, void>;
 export type RemoveReviewType = GenericApiFn<undefined, void>;
+export type AddUserToGroupType = GenericApiFn<User, void>;
+export type UpdateUserType = GenericApiFn<object, void>;
+export type AddUserReviewType = GenericApiFn<string, void>;
 
 export interface IReviewServiceApi {
   getReviewQueue: GetReviewQueueType;
   addReview: AddReviewType;
   updateUserReview: UpdateUserReviewType;
-  updateReviewQueue: UpdateReviewQueueType;
   getUsersReview: GetUsersReviewType;
+  getUsersReviewList: GetUsersReviewListType;
   getReview: GetReviewType;
   getUser: GetUserType;
   removeUserReview: RemoveUserReviewType;
   removeReview: RemoveReviewType;
   getUsersList: GetUsersListType;
   getReviewsList: GetReviewsListType;
+  addReviewQueue: AddReviewQueueType;
+  addUserReview: AddUserReviewType;
+}
+
+// group
+
+export interface IGroupServiceApi {
+  getReviewQueue: GetReviewQueueType;
+  addReviewQueue: AddReviewQueueType;
+  addUserToGroup: AddUserToGroupType;
+  updateUser: UpdateUserType;
 }
