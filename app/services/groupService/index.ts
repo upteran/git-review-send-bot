@@ -30,7 +30,7 @@ export const groupService = (api: IGroupServiceApi): IGroupService => {
     const user = new User(id, username || first_name);
     const reviewQueue = (await serviceApi.getReviewQueue({ chatId })) || [];
 
-    await serviceApi.addUserToGroup({ id, chatId }, user);
+    await serviceApi.addUserToGroup({ id, chatId }, user.params);
     // TODO: realize Map collection
     if (!reviewQueue.includes(id)) {
       reviewQueue.push(id);

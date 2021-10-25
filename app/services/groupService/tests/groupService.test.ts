@@ -40,6 +40,6 @@ describe('group Service', () => {
     }
     // @ts-ignore
     expectData[1]['review_queue'] = expectedQueue;
-    expect(dbMock).toBe(expectData);
+    expect(dbMock).toStrictEqual(expectData);
   });
 });

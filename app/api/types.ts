@@ -1,7 +1,6 @@
 import Review from '../models/review/Review';
 import { IReviewRecord } from '../models/review/types';
-import User from '../models/user/User';
-import { IUserRecord, IUsersReviewRecord } from '../models/user/types';
+import { IUser, IUserRecord, IUsersReviewRecord } from '../models/user/types';
 
 export type GroupApiType = {
   id?: number | string;
@@ -27,11 +26,11 @@ export type GetUsersReviewListType = GenericApiFn<
 >;
 export type GetReviewType = GenericApiFn<undefined, Review>;
 export type GetReviewsListType = GenericApiFn<undefined, IReviewRecord>;
-export type GetUserType = GenericApiFn<undefined, User>;
+export type GetUserType = GenericApiFn<undefined, IUser>;
 export type GetUsersListType = GenericApiFn<undefined, IUserRecord>;
 export type RemoveUserReviewType = GenericApiFn<undefined, void>;
 export type RemoveReviewType = GenericApiFn<undefined, void>;
-export type AddUserToGroupType = GenericApiFn<User, void>;
+export type AddUserToGroupType = GenericApiFn<IUser, void>;
 export type UpdateUserType = GenericApiFn<object, void>;
 export type AddUserReviewType = GenericApiFn<string, void>;
 
