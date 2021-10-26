@@ -2,6 +2,7 @@ import { TelegrafContext } from 'telegraf/typings/context';
 
 import { ErrorHandlerFnType } from './types';
 
+// TODO: add normal types
 function handleError(
   ctx: any,
   errorClass: any,
@@ -27,7 +28,6 @@ export const chatErrorHandlerDecorator =
     try {
       if (!ctx.from) throw new Error('No `from` field found on context');
       if (!ctx.chat) throw new Error('No `chat` field found on context');
-      console.log('RUN');
       const result = fn(ctx);
       if (
         result &&

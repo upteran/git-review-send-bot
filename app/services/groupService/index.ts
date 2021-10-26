@@ -66,7 +66,7 @@ export const groupService = (api: IGroupServiceApi): IGroupService => {
       chat: { id: chatId },
       reply
     } = ctx;
-    const activeReview = await serviceApi.getUsersReview({ chatId });
+    const activeReview = await serviceApi.getUsersReview({ id, chatId });
 
     if (activeReview) {
       reply(`You have got active MR, close it before out`);
