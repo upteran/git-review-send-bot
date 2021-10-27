@@ -5,8 +5,6 @@ import {
   getUserObj,
   addReviewToUser,
   addUserToMockDb,
-  disableUserCheck,
-  enableUserCheck,
   mockSendTgMsg
 } from './helpers';
 
@@ -69,7 +67,7 @@ describe('group Service', () => {
     const expectData = createEmptyDb(chatId);
 
     // create 5 users
-    for (let i = 1; i < 5; i++) {
+    for (let i = 1; i <= 5; i++) {
       const user = getUserObj(i, `name${i}`);
       addUserToMockDb(expectData, chatId, user);
       addUserToMockDb(dbMock, chatId, user);
@@ -79,10 +77,11 @@ describe('group Service', () => {
     const activeUserId = 3;
     const user = getUserObj(activeUserId, `name${activeUserId}`);
     const tgCtx = mockSendTgMsg(user, chatId, () => 'str');
-
     await gService.disableUser(tgCtx);
 
-    disableUserCheck(dbMock, expectData, chatId, activeUserId);
+    const dbQ = dbMock[chatId].review_queue;
+
+    expect(dbQ[activeUserId - 1]).toBe(activeUserId + 1);
   });
 
   it('should send msg and stop opt out if user has active review', async () => {
@@ -126,11 +125,15 @@ describe('group Service', () => {
     const user = getUserObj(activeUserId, `name${activeUserId}`);
     const tgCtx = mockSendTgMsg(user, chatId, (msg: any) => console.log(msg));
 
+    let dbQ = null;
+
     await gService.disableUser(tgCtx);
-    disableUserCheck(dbMock, expectData, chatId, activeUserId);
+    dbQ = dbMock[chatId].review_queue;
+    expect(dbQ[activeUserId - 1]).toBe(activeUserId + 1);
 
     // enable user
     await gService.enableUser(tgCtx);
-    enableUserCheck(dbMock, expectData, chatId, activeUserId);
+    dbQ = dbMock[chatId].review_queue;
+    expect(dbQ[dbQ.length - 1]).toBe(activeUserId);
   });
 });

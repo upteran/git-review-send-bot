@@ -70,9 +70,7 @@ export const reviewService = (api: IReviewServiceApi) => {
     } = ctx;
 
     const userReviewId = await serviceApi.getUsersReview({ id, chatId });
-
     await serviceApi.removeUserReview({ id, chatId });
-    // @ts-ignore
     await serviceApi.removeReview({ id: userReviewId, chatId });
 
     const reviewQueue = (await serviceApi.getReviewQueue({ chatId })) || [];

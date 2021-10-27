@@ -8,12 +8,17 @@ const mockUser = { id: 1, username: 'some' };
 export const mockSendTgMsg = (
   user = mockUser,
   chatId = 1,
-  msgCb = (msg: any): void => console.log(msg)
+  msgCb = (msg: any): void => console.log(msg),
+  // TODO: move to const and add type
+  message = {
+    text: '/review msg',
+    entities: [{ offset: 0, length: 7, type: 'bot_command' }]
+  }
 ): object => ({
   from: user,
-  // @ts-ignore
   chat: { id: chatId },
-  reply: msgCb
+  reply: msgCb,
+  message
 });
 
 export const getUserObj = (id: number, username: string): IUser => ({
@@ -33,10 +38,11 @@ export const getReviewRecord = (
 });
 
 export const addReviewToUser = (
-  dbMock: any,
+  dbMock: DbChatType,
   chatId: number,
   userId: number
 ): void => {
+  // @ts-ignore
   dbMock[chatId].users_review[userId] = `${userId}`;
   dbMock[chatId].reviews = {
     ...dbMock[chatId].reviews,
@@ -62,34 +68,25 @@ export const addUserToMockDb = (
     ...(db[chatId].members || {}),
     ...getUserRecord(id, username)
   };
-  if (!db[chatId]['review_queue']) {
-    db[chatId]['review_queue'] = [];
-  }
   db[chatId]['review_queue'].push(id);
 };
 
-export const disableUserCheck = (
+export const disableUser = (
   db: DbChatType,
-  expectDb: { [key: number]: { review_queue: Array<number> } },
   chatId: number,
   userId: number
 ): void => {
   // @ts-ignore
-  expectDb[chatId].members[userId].status = 'disable';
-  expectDb[chatId].review_queue = expectDb[chatId].review_queue.filter(
-    id => id !== userId
-  );
-  expect(db).toStrictEqual(expectDb);
+  db[chatId].members[userId].status = 'disable';
+  db[chatId].review_queue = db[chatId].review_queue.filter(id => id !== userId);
 };
 
-export const enableUserCheck = (
+export const enableUser = (
   db: DbChatType,
-  expectDb: DbChatType,
   chatId: number,
   userId: number
 ): void => {
   // @ts-ignore
-  expectDb[chatId].members[userId].status = 'active';
-  expectDb[chatId].review_queue.push(userId);
-  expect(db).toStrictEqual(expectDb);
+  db[chatId].members[userId].status = 'active';
+  db[chatId].review_queue.push(userId);
 };
