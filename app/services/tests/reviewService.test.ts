@@ -11,7 +11,7 @@ import {
 const chatId = 1;
 
 describe('review Service', () => {
-  it('set review by queue order and remove id from queue', async () => {
+  it('remove id from queue by order', async () => {
     const dbMock = createEmptyDb(chatId);
     const gService = reviewService(apiReviewMock(dbMock));
 
@@ -36,7 +36,7 @@ describe('review Service', () => {
     }
   });
 
-  it('set review to user after disabled users', async () => {
+  it('set review to user only after disabled users', async () => {
     const dbMock = createEmptyDb(chatId);
     const expectDb = createEmptyDb(chatId);
     const gService = reviewService(apiReviewMock(dbMock));

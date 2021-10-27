@@ -58,4 +58,5 @@ export interface IGroupServiceApi {
   addReviewQueue: AddReviewQueueType;
   addUserToGroup: AddUserToGroupType;
   updateUser: UpdateUserType;
+  getUser: GetUserType;
 }

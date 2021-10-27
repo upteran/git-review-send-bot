@@ -27,6 +27,25 @@ describe('group Service', () => {
     expect(console.log).toHaveBeenCalledWith('Welcome to team!');
   });
 
+  it('should stop reg and send msg to user if user already exist', async () => {
+    console.log = jest.fn();
+    const userId = 1;
+    const userName = `name${1}`;
+    const dbMock = createEmptyDb(chatId);
+    const gService = groupService(apiMock(dbMock));
+
+    const user = getUserObj(userId, `name${1}`);
+
+    const tgCtx = mockSendTgMsg(user, chatId, (msg: any) => console.log(msg));
+    await gService.registrationUser(tgCtx);
+
+    // @ts-ignore
+    expect(dbMock[chatId].members[userId].username).toEqual(userName);
+    await gService.registrationUser(tgCtx);
+
+    expect(console.log).toHaveBeenLastCalledWith('User already exist!');
+  });
+
   it('shouldn`t add users duplicate with same id to db and queue', async () => {
     console.log = jest.fn();
     const dbMock = createEmptyDb(chatId);

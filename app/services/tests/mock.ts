@@ -30,6 +30,11 @@ export const apiMock = (db: DbChatType): IGroupServiceApi => ({
       // @ts-ignore
       db[chatId].members[id][key] = params[key];
     });
+  },
+  getUser: async (config: GroupApiType) => {
+    const { chatId, id } = config;
+    // @ts-ignore
+    return db[chatId].members[id];
   }
 });
 
@@ -101,6 +106,9 @@ export const apiErrorMock = (): IGroupServiceApi => ({
     throw Error();
   },
   updateUser: async () => {
+    throw Error();
+  },
+  getUser: async () => {
     throw Error();
   }
 });

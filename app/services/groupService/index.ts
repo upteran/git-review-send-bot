@@ -26,6 +26,11 @@ export const groupService = (api: IGroupServiceApi): IGroupService => {
       reply
     } = ctx;
 
+    const isCurrUserExist = !!(await serviceApi.getUser({ chatId, id }));
+    if (isCurrUserExist) {
+      reply('User already exist!');
+      return;
+    }
     // TODO: add check to registr before user
     const user = new User(id, username || first_name);
     const reviewQueue = (await serviceApi.getReviewQueue({ chatId })) || [];
