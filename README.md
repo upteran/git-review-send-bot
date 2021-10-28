@@ -33,8 +33,7 @@ and pass it to index.ts init file, without change any logic on project
 
 | Name                    | Description                                                                           |
 | ----------------------- | ------------------------------------------------------------------------------------- |
-| TELEGRAM_API_KEY        | API key for the telegram bot, provided by [@BotFather](https://telegram.me/BotFather) |
-| BOT_USERNAME            | Username of the live bot on Telegram. Must be without the @ sign.                     |
+| TELEGRAM_API_KEY        | API key for the telegram bot, provided by [@BotFather](https://telegram.me/BotFather) |               |
 | FIREBASE_API_KEY        | Firebase project api key from your project console                                    |
 | FIREBASE_DB_URL         |                                                                                       |
 | FIREBASE_STORAGE_BUCKET |                                                                                       |

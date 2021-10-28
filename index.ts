@@ -6,10 +6,10 @@ import { addBotCommands } from './app/helpers/addBotCommands';
 import { groupCommands } from './app/controllers/groupController';
 import { reviewCommands } from './app/controllers/reviewController';
 
-const { apiKey, botUsername } = tgConfig;
+const { apiKey } = tgConfig;
 
 export function initBot(): void {
-  if (!apiKey || !botUsername) {
+  if (!apiKey) {
     console.error('Bot init config error');
     return;
   }
