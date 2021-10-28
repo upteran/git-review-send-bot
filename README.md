@@ -22,6 +22,13 @@ PR links (it can be any string or link) and uses for it ordered queue
 own services api, in theory for create another functional, you can create own service, model, commands and controller where it all will init, 
 and pass it to index.ts init file, without change any logic on project
 
+## Installation
+
+-   Clone the repository
+-   yarn install
+-   Create `.env` file with configs (ex: `.env-example`)
+-   Run `npm start` or `npm start:dev` to start the service.
+
 ## Environment Variables
 
 | Name                    | Description                                                                           |
