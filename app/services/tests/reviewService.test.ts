@@ -192,4 +192,32 @@ describe('review Service', () => {
       `[name1](tg://user?id=${authorId}), [you have active MR to review =  msg]`
     );
   });
+
+  it('clear all reviews and connections', async () => {
+    // console.log = jest.fn();
+    const dbMock = createEmptyDb(chatId);
+    const gService = reviewService(apiReviewMock(dbMock));
+
+    for (let i = 1; i < 10; i++) {
+      const user = getUserObj(i, `name${i}`);
+      addUserToMockDb(dbMock, chatId, user);
+    }
+
+    const fullQueue = [...dbMock[chatId].review_queue];
+
+    for (let i = 1; i < 10; i++) {
+      const tgCtx = getTgCtx(i);
+      if (i > 4) {
+        // @ts-ignore
+        await gService.setReview(tgCtx);
+      }
+    }
+
+    const tgCtxClear = getTgCtx(8);
+    // @ts-ignore
+    await gService.clearAllReviews(tgCtxClear);
+    expect(dbMock[chatId].reviews).toEqual(null);
+    expect(dbMock[chatId].users_review).toEqual(null);
+    expect(dbMock[chatId].review_queue).toEqual(fullQueue);
+  });
 });

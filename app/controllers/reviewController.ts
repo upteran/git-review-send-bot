@@ -19,9 +19,9 @@ export const reviewCommands = [
   {
     name: 'check_all',
     cb: review.checkAllStatus
+  },
+  {
+    name: 'clear_all',
+    cb: review.clearAllReviews
   }
-  // {
-  //   name: 'clear_all',
-  //   cb: review.clearAllReviews
-  // }
 ];

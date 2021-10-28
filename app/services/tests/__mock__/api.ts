@@ -94,15 +94,25 @@ const removeUserReview =
   (db: DbChatType) =>
   async (config: GroupApiType): Promise<void> => {
     const { chatId, id } = config;
-    // @ts-ignore
-    db[chatId].users_review[id] = null;
+    if (id) {
+      // @ts-ignore
+      db[chatId].users_review[id] = null;
+    } else {
+      // @ts-ignore
+      db[chatId].users_review = null;
+    }
   };
 const removeReview =
   (db: DbChatType) =>
   async (config: GroupApiType): Promise<void> => {
     const { chatId, id } = config;
-    // @ts-ignore
-    db[chatId].reviews[id] = null;
+    if (id) {
+      // @ts-ignore
+      db[chatId].reviews[id] = null;
+    } else {
+      // @ts-ignore
+      db[chatId].reviews = null;
+    }
   };
 
 // mock service api

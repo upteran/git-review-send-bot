@@ -147,16 +147,23 @@ export const reviewService = (api: IReviewServiceApi) => {
     });
   };
 
-  // const clearAllReviews = async (ctx: TelegrafContext) => {
-  //   const {
-  //     // @ts-ignore
-  //     chat: { id: chatId },
-  //     reply
-  //   } = ctx;
-  //   await serviceApi.removeUserReview({ chatId });
-  //   await serviceApi.removeReview({ chatId });
-  //   reply('All reviews are cleared!');
-  // };
+  const clearAllReviews = async (ctx: TelegrafContext) => {
+    const {
+      // @ts-ignore
+      chat: { id: chatId },
+      reply
+    } = ctx;
+    const queue: Array<number> = [];
+    const users = (await serviceApi.getUsersList({ chatId })) || [];
+    Object.keys(users).forEach(key => {
+      const user = users[key];
+      queue.push(user.id);
+    });
+    await serviceApi.removeUserReview({ chatId });
+    await serviceApi.removeReview({ chatId });
+    await serviceApi.addReviewQueue({ chatId }, queue);
+    reply('All reviews are cleared!');
+  };
 
   return {
     setReview: chatErrorHandlerDecorator(
@@ -174,10 +181,10 @@ export const reviewService = (api: IReviewServiceApi) => {
     checkAllStatus: chatErrorHandlerDecorator(
       Error,
       errorCb('checkAllStatus')
-    )(checkAllStatus)
-    // clearAllReviews: chatErrorHandlerDecorator(
-    //   Error,
-    //   errorCb('clearAllReviews')
-    // )(clearAllReviews)
+    )(checkAllStatus),
+    clearAllReviews: chatErrorHandlerDecorator(
+      Error,
+      errorCb('clearAllReviews')
+    )(clearAllReviews)
   };
 };

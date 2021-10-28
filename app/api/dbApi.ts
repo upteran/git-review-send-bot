@@ -18,7 +18,7 @@ export function addData({ path }: { path: string }) {
 
 export function removeData({ path }: { path: string }) {
   return async <T>(apiConfig: GroupApiType, params: T): Promise<void> => {
-    const { chatId, id } = apiConfig;
+    const { chatId, id = '' } = apiConfig;
     try {
       await set(ref(database, `groups/${chatId}/${path}/${id}`), null);
     } catch (err) {
