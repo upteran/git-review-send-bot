@@ -6,10 +6,10 @@ import {
 import { DbChatType } from '../types';
 import {
   IUser,
-  IUserRecord,
-  IUsersReviewRecord
-} from '../../../models/user/types';
-import { IReviewRecord } from '../../../models/review/types';
+  myUserRecord,
+  myUsersReviewRecord,
+  myReviewRecord
+} from '../../../models/types';
 
 // api mock fn
 const getReviewQueue =
@@ -62,7 +62,7 @@ const addReview =
   };
 const getUsersReviewList =
   (db: DbChatType) =>
-  async (config: GroupApiType): Promise<IUsersReviewRecord> => {
+  async (config: GroupApiType): Promise<typeof myUsersReviewRecord> => {
     const { chatId } = config;
     return db[chatId].users_review;
   };
@@ -73,13 +73,13 @@ const getReview = (db: DbChatType) => async (config: GroupApiType) => {
 };
 const getReviewsList =
   (db: DbChatType) =>
-  async (config: GroupApiType): Promise<IReviewRecord> => {
+  async (config: GroupApiType): Promise<typeof myReviewRecord> => {
     const { chatId } = config;
     return db[chatId].reviews;
   };
 const getUsersList =
   (db: DbChatType) =>
-  async (config: GroupApiType): Promise<IUserRecord> => {
+  async (config: GroupApiType): Promise<typeof myUserRecord> => {
     const { chatId } = config;
     return db[chatId].members;
   };

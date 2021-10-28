@@ -1,5 +1,5 @@
-import { escape } from '../../helpers/escapeMarkdown';
-import { IUser } from './types';
+import { escape } from 'app/helpers/escapeMarkdown';
+import { IUser } from 'app/models/types';
 /**
  * Entity to represent a telegram user.
  */

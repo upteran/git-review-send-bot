@@ -1,6 +1,6 @@
-import { IUser } from '../../../models/user/types';
-import User from '../../../models/user/User';
-import Review from '../../../models/review/Review';
+import { IUser } from '../../../models/types';
+import User from '../../../models/User';
+import Review from '../../../models/Review';
 import { DbChatType } from '../../../services/tests/types';
 
 export const getUserObj = (id: number, username: string): IUser =>

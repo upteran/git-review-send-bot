@@ -2,7 +2,7 @@
 import { TelegrafContext } from 'telegraf/typings/context';
 import { nanoid } from 'nanoid';
 
-import Review from '../../models/review/Review';
+import Review from '../../models/Review';
 import { getUserMessage } from '../../helpers/getUserMessage';
 import { parseName, parseHtmlName } from '../../helpers/tgParsers/user';
 import { IReviewServiceApi } from '../../api/types';

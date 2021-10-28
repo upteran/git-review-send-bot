@@ -1,11 +1,10 @@
-import { IReviewRecord } from '../../models/review/types';
-import { IUserRecord } from '../../models/user/types';
+import { myUserRecord, myReviewRecord } from '../../models/types';
 
 export type DbType = {
-  members: IUserRecord;
+  members: typeof myUserRecord;
   review_queue: Array<number>;
   users_review: { [key: string | number]: string };
-  reviews: IReviewRecord;
+  reviews: typeof myReviewRecord;
 };
 
 export type DbChatType = {

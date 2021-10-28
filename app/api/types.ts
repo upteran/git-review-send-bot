@@ -1,15 +1,15 @@
-import Review from '../models/review/Review';
-import { IReviewRecord } from '../models/review/types';
-import { IUser, IUsersReviewRecord, IUserRecord } from '../models/user/types';
+import Review from '../models/Review';
+import {
+  IUser,
+  myReviewRecord,
+  myUsersReviewRecord,
+  myUserRecord
+} from '../models/types';
 
 export type GroupApiType = {
   id?: number | string;
   chatId: number;
 };
-
-// type UpdUserReviewParamsType = {
-//   [key: string]: number;
-// };
 
 export interface GenericApiFn<T, R> {
   (apiConfig: GroupApiType, params?: T): Promise<R>;
@@ -21,12 +21,12 @@ export type AddReviewQueueType = GenericApiFn<object, void>;
 export type GetUsersReviewType = GenericApiFn<undefined, string>;
 export type GetUsersReviewListType = GenericApiFn<
   undefined,
-  IUsersReviewRecord
+  typeof myUsersReviewRecord
 >;
 export type GetReviewType = GenericApiFn<undefined, Review>;
-export type GetReviewsListType = GenericApiFn<undefined, IReviewRecord>;
+export type GetReviewsListType = GenericApiFn<undefined, typeof myReviewRecord>;
 export type GetUserType = GenericApiFn<undefined, IUser>;
-export type GetUsersListType = GenericApiFn<undefined, IUserRecord>;
+export type GetUsersListType = GenericApiFn<undefined, typeof myUserRecord>;
 export type RemoveUserReviewType = GenericApiFn<undefined, void>;
 export type RemoveReviewType = GenericApiFn<undefined, void>;
 export type AddUserToGroupType = GenericApiFn<IUser, void>;
