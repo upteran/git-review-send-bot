@@ -3,9 +3,8 @@ import User from '../../../models/user/User';
 import Review from '../../../models/review/Review';
 import { DbChatType } from '../../../services/tests/types';
 
-export const getUserObj = (id: number, username: string): IUser => ({
-  ...new User(id, username).params
-});
+export const getUserObj = (id: number, username: string): IUser =>
+  new User(id, username);
 
 export const getUserRecord = (id: number, username: string): object => ({
   [id]: getUserObj(id, username)
@@ -16,7 +15,7 @@ export const getReviewRecord = (
   msg: string,
   authorId: number
 ): object => ({
-  [id]: new Review(id, msg, authorId).params
+  [id]: new Review(id, msg, authorId)
 });
 
 export const addReviewToUser = (

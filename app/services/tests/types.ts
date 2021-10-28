@@ -1,7 +1,8 @@
 import { IReviewRecord } from '../../models/review/types';
+import { IUserRecord } from '../../models/user/types';
 
 export type DbType = {
-  members: object;
+  members: IUserRecord;
   review_queue: Array<number>;
   users_review: { [key: string | number]: string };
   reviews: IReviewRecord;

@@ -1,5 +1,5 @@
 import { groupService } from '../groupService';
-import { apiMock, apiErrorMock } from './__mock__/api';
+import { apiGroupMock, apiErrorMock } from './__mock__/api';
 import {
   createEmptyDb,
   getUserObj,
@@ -15,7 +15,7 @@ describe('group Service', () => {
     console.log = jest.fn();
     const dbMock = createEmptyDb(chatId);
     const expectData = createEmptyDb(chatId);
-    const gService = groupService(apiMock(dbMock));
+    const gService = groupService(apiGroupMock(dbMock));
 
     for (let i = 1; i < 20; i++) {
       const user = getUserObj(i, `name${i}`);
@@ -32,14 +32,13 @@ describe('group Service', () => {
     const userId = 1;
     const userName = `name${1}`;
     const dbMock = createEmptyDb(chatId);
-    const gService = groupService(apiMock(dbMock));
+    const gService = groupService(apiGroupMock(dbMock));
 
     const user = getUserObj(userId, `name${1}`);
 
     const tgCtx = mockSendTgMsg(user, chatId, (msg: any) => console.log(msg));
     await gService.registrationUser(tgCtx);
 
-    // @ts-ignore
     expect(dbMock[chatId].members[userId].username).toEqual(userName);
     await gService.registrationUser(tgCtx);
 
@@ -50,7 +49,7 @@ describe('group Service', () => {
     console.log = jest.fn();
     const dbMock = createEmptyDb(chatId);
     const expectData = createEmptyDb(chatId);
-    const gService = groupService(apiMock(dbMock));
+    const gService = groupService(apiGroupMock(dbMock));
 
     for (let i = 1; i < 20; i++) {
       const user = getUserObj(i, `name${i}`);
@@ -91,7 +90,7 @@ describe('group Service', () => {
       addUserToMockDb(expectData, chatId, user);
       addUserToMockDb(dbMock, chatId, user);
     }
-    const gService = groupService(apiMock(dbMock));
+    const gService = groupService(apiGroupMock(dbMock));
 
     const activeUserId = 3;
     const user = getUserObj(activeUserId, `name${activeUserId}`);
@@ -117,7 +116,7 @@ describe('group Service', () => {
     }
 
     addReviewToUser(dbMock, chatId, activeUserId);
-    const gService = groupService(apiMock(dbMock));
+    const gService = groupService(apiGroupMock(dbMock));
 
     const user = getUserObj(activeUserId, `name${activeUserId}`);
     const tgCtx = mockSendTgMsg(user, chatId, (msg: any) => console.log(msg));
@@ -139,7 +138,7 @@ describe('group Service', () => {
       addUserToMockDb(dbMock, chatId, user);
     }
 
-    const gService = groupService(apiMock(dbMock));
+    const gService = groupService(apiGroupMock(dbMock));
 
     const user = getUserObj(activeUserId, `name${activeUserId}`);
     const tgCtx = mockSendTgMsg(user, chatId, (msg: any) => console.log(msg));

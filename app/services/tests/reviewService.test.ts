@@ -30,13 +30,9 @@ describe('review Service', () => {
     const filledQueue = [...dbMock[chatId].review_queue];
 
     for (let i = 1; i < 10; i++) {
-      const tgCtx = mockSendTgMsg(
-        { id: i, username: `name${i}` },
-        chatId,
-        (msg: any) => console.log(msg)
-      );
+      const tgCtx = getTgCtx(i);
 
-      // @ts-ignore
+      // @ts-ignore because of tgCtx is mock and not extend to TelegrafCtx
       await gService.setReview(tgCtx);
       filledQueue.shift();
       expect(dbMock[chatId].review_queue).toEqual(filledQueue);
@@ -62,7 +58,7 @@ describe('review Service', () => {
 
     const tgCtx = getTgCtx(8);
 
-    // @ts-ignore
+    // @ts-ignore because of tgCtx is mock and not extend to TelegrafCtx
     await gService.setReview(tgCtx);
     expect(dbMock[chatId].review_queue[0]).toBe(5);
   });
@@ -82,7 +78,7 @@ describe('review Service', () => {
     const tgCtx = getTgCtx(authorId);
 
     const userSelectedId = 1;
-    // @ts-ignore
+    // @ts-ignore because of tgCtx is mock and not extend to TelegrafCtx
     await gService.setReview(tgCtx);
     expect(dbMock[chatId].review_queue[0]).toBe(userSelectedId + 1);
 
@@ -113,13 +109,13 @@ describe('review Service', () => {
     const tgCtx = getTgCtx(authorId);
 
     const userSelectedId = 1;
-    // @ts-ignore
+    // @ts-ignore because of tgCtx is mock and not extend to TelegrafCtx
     await gService.setReview(tgCtx);
 
     const reviewId = dbMock[chatId].users_review[userSelectedId];
     const tgCtxEndReview = getTgCtx(userSelectedId);
 
-    // @ts-ignore
+    // @ts-ignore because of tgCtx is mock and not extend to TelegrafCtx
     await gService.endReview(tgCtxEndReview);
     expect(dbMock[chatId].reviews[reviewId]).toEqual(null);
     expect(dbMock[chatId].users_review[userSelectedId]).toEqual(null);
@@ -140,14 +136,14 @@ describe('review Service', () => {
     const authorId = 8;
     const tgCtx = getTgCtx(authorId);
 
-    // @ts-ignore
+    // @ts-ignore because of tgCtx is mock and not extend to TelegrafCtx
     await gService.setReview(tgCtx);
 
     const userSelectedId = 1;
     const reviewId = dbMock[chatId].users_review[userSelectedId];
     const tgCtxEndReview = getTgCtx(userSelectedId);
 
-    // @ts-ignore
+    // @ts-ignore because of tgCtx is mock and not extend to TelegrafCtx
     await gService.endReview(tgCtxEndReview);
     expect(dbMock[chatId].reviews[reviewId]).toEqual(null);
     expect(dbMock[chatId].users_review[userSelectedId]).toEqual(null);
@@ -169,16 +165,16 @@ describe('review Service', () => {
     const authorId = 1;
     const tgCtx = getTgCtx(authorId);
 
-    // @ts-ignore
+    // @ts-ignore because of tgCtx is mock and not extend to TelegrafCtx
     await gService.checkStatus(tgCtx);
 
     const userSelectedId = 8;
     const tgCtxSetReview = getTgCtx(userSelectedId);
 
-    // @ts-ignore
+    // @ts-ignore because of tgCtx is mock and not extend to TelegrafCtx
     await gService.setReview(tgCtxSetReview);
 
-    // @ts-ignore
+    // @ts-ignore because of tgCtx is mock and not extend to TelegrafCtx
     await gService.checkStatus(tgCtx);
 
     // 1 => no MR msg
