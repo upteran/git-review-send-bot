@@ -2,7 +2,7 @@
   "name": "review-send-bot",
   "version": "0.0.1",
   "description": "Telegram bot to send and set links to chat user",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
     "test": "jest --testPathPattern .*\\.test\\.ts",
     "test:watch": "yarn test --watch",
