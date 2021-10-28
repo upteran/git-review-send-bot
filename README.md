@@ -31,3 +31,5 @@ and pass it to index.ts init file, without change any logic on project
 | FIREBASE_API_KEY        | Firebase project api key from your project console                                    |
 | FIREBASE_DB_URL         |                                                                                       |
 | FIREBASE_STORAGE_BUCKET |                                                                                       |
+
+- For dev env can user .env file for pass environment vars, ex: `.env-example`
