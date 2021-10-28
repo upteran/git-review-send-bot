@@ -45,7 +45,7 @@ export const reviewService = (api: IReviewServiceApi) => {
     const nextUserId = reviewQueue.shift();
 
     await serviceApi.addReview({ id: reviewId, chatId }, review);
-    await serviceApi.addUserReview({ id: authorId, chatId }, reviewId);
+    await serviceApi.addUserReview({ id: nextUserId, chatId }, reviewId);
     await serviceApi.addReviewQueue({ chatId }, reviewQueue);
 
     const user = await serviceApi.getUser({ chatId, id: nextUserId });

@@ -1,12 +1,12 @@
 import { groupService } from '../groupService';
-import { apiMock, apiErrorMock } from './mock';
+import { apiMock, apiErrorMock } from './__mock__/api';
 import {
   createEmptyDb,
   getUserObj,
   addReviewToUser,
-  addUserToMockDb,
-  mockSendTgMsg
-} from './helpers';
+  addUserToMockDb
+} from './__mock__/db';
+import { mockSendTgMsg } from './__mock__/tg';
 
 const chatId = 1;
 

@@ -1,15 +1,15 @@
 import Review from '../models/review/Review';
 import { IReviewRecord } from '../models/review/types';
-import { IUser, IUserRecord, IUsersReviewRecord } from '../models/user/types';
+import { IUser, IUsersReviewRecord, IUserRecord } from '../models/user/types';
 
 export type GroupApiType = {
   id?: number | string;
   chatId: number;
 };
 
-type UpdUserReviewParamsType = {
-  [key: string]: number;
-};
+// type UpdUserReviewParamsType = {
+//   [key: string]: number;
+// };
 
 export interface GenericApiFn<T, R> {
   (apiConfig: GroupApiType, params?: T): Promise<R>;
@@ -18,7 +18,6 @@ export interface GenericApiFn<T, R> {
 export type GetReviewQueueType = GenericApiFn<undefined, Array<number>>;
 export type AddReviewType = GenericApiFn<Review, void>;
 export type AddReviewQueueType = GenericApiFn<object, void>;
-export type UpdateUserReviewType = GenericApiFn<UpdUserReviewParamsType, void>;
 export type GetUsersReviewType = GenericApiFn<undefined, string>;
 export type GetUsersReviewListType = GenericApiFn<
   undefined,
@@ -37,7 +36,6 @@ export type AddUserReviewType = GenericApiFn<string, void>;
 export interface IReviewServiceApi {
   getReviewQueue: GetReviewQueueType;
   addReview: AddReviewType;
-  updateUserReview: UpdateUserReviewType;
   getUsersReview: GetUsersReviewType;
   getUsersReviewList: GetUsersReviewListType;
   getReview: GetReviewType;

@@ -2,10 +2,10 @@ import {
   GroupApiType,
   IGroupServiceApi,
   IReviewServiceApi
-} from '../../api/types';
-import { DbChatType } from './types';
-import { IUsersReviewRecord } from '../../models/user/types';
-import { IReviewRecord } from '../../models/review/types';
+} from '../../../api/types';
+import { DbChatType } from '../types';
+import { IUsersReviewRecord } from '../../../models/user/types';
+import { IReviewRecord } from '../../../models/review/types';
 
 export const apiMock = (db: DbChatType): IGroupServiceApi => ({
   getReviewQueue: async (config: GroupApiType) => {
@@ -38,10 +38,6 @@ export const apiMock = (db: DbChatType): IGroupServiceApi => ({
   }
 });
 
-//   updateUserReview: UpdateUserReviewType;
-//   removeUserReview: RemoveUserReviewType;
-//   removeReview: RemoveReviewType;
-//   addUserReview: AddUserReviewType;
 export const apiReviewMock = (db: DbChatType): IReviewServiceApi => ({
   getReviewQueue: async (config: GroupApiType): Promise<Array<number>> => {
     const { chatId } = config;
@@ -89,6 +85,23 @@ export const apiReviewMock = (db: DbChatType): IReviewServiceApi => ({
     const { chatId, id } = config;
     // @ts-ignore
     db[chatId].users_review[id] = value;
+  },
+  removeUserReview: async (config: GroupApiType): Promise<void> => {
+    const { chatId, id } = config;
+    // @ts-ignore
+    db[chatId].users_review[id] = null;
+  },
+  removeReview: async (config: GroupApiType): Promise<void> => {
+    const { chatId, id } = config;
+    // @ts-ignore
+    db[chatId].reviews[id] = null;
+  },
+  updateUser: async (config: GroupApiType, params: any) => {
+    const { chatId, id } = config;
+    Object.keys(params).forEach(key => {
+      // @ts-ignore
+      db[chatId].members[id][key] = params[key];
+    });
   }
 });
 

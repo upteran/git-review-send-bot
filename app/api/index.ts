@@ -2,7 +2,6 @@ import { getData, addData, updateData, removeData } from './dbApi';
 import {
   GetReviewQueueType,
   AddReviewType,
-  UpdateUserReviewType,
   GetUsersReviewType,
   GetReviewType,
   GetUserType,
@@ -71,9 +70,9 @@ export const removeReview: RemoveReviewType = removeData({
 
 // users_reviews
 export const addUserReview = addData({ path: endpoints.USERS_REVIEW });
-export const updateUserReview: UpdateUserReviewType = updateData({
-  path: endpoints.USERS_REVIEW
-});
+// export const updateUserReview: UpdateUserReviewType = updateData({
+//   path: endpoints.USERS_REVIEW
+// });
 export const getUsersReview: GetUsersReviewType = getData({
   path: endpoints.USERS_REVIEW
 });
@@ -100,7 +99,6 @@ export const reviewApi: IReviewServiceApi = {
   addReviewQueue,
   getUsersReview,
   addUserReview,
-  updateUserReview,
   removeUserReview,
   removeReview,
   getReview,
