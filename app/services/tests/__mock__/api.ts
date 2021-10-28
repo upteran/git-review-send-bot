@@ -69,6 +69,7 @@ const getUsersReviewList =
   };
 const getReview = (db: DbChatType) => async (config: GroupApiType) => {
   const { chatId, id } = config;
+  // @ts-ignore
   return db[chatId].reviews[id];
 };
 const getReviewsList =
