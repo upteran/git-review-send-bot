@@ -7,7 +7,7 @@ export function addData({ path }: { path: string }) {
     const { chatId, id = '' } = apiConfig;
     try {
       console.log(`${path} path`, params);
-      await set(ref(database, `groups/${chatId}/${path}/${id}`), params);
+      await set(ref(database, `rooms/${chatId}/${path}/${id}`), params);
     } catch (err) {
       throw new TypeError(
         `Error add ${path} with ${params} to db, err = ${err}`
@@ -20,7 +20,7 @@ export function removeData({ path }: { path: string }) {
   return async <T>(apiConfig: GroupApiType, params: T): Promise<void> => {
     const { chatId, id = '' } = apiConfig;
     try {
-      await set(ref(database, `groups/${chatId}/${path}/${id}`), null);
+      await set(ref(database, `rooms/${chatId}/${path}/${id}`), null);
     } catch (err) {
       throw new TypeError(
         `Error remove ${path} with ${params} from db, err = ${err}`
@@ -33,7 +33,7 @@ export function getData({ path }: { path: string }) {
   return async function <T>(apiConfig: GroupApiType): Promise<T> {
     const { chatId, id = '' } = apiConfig;
     const dbRef = ref(database);
-    const createdPath = `groups/${chatId}/${path}/${id}`;
+    const createdPath = `rooms/${chatId}/${path}/${id}`;
     // TODO: add default return value
     let data = null;
     try {
@@ -62,7 +62,7 @@ export function updateData({ path }: { path: string }) {
       const updates = {};
       Object.keys(params).forEach(key => {
         // @ts-ignore
-        updates[`groups/${chatId}/${path}/${id}/${key}`] = params[key];
+        updates[`rooms/${chatId}/${path}/${id}/${key}`] = params[key];
       });
       return update(ref(database), updates);
     } catch (e) {
