@@ -33,20 +33,27 @@ export const reviewService = (api: IReviewServiceApi) => {
       return;
     }
 
-    const reviewQueue = await serviceApi.getReviewQueue({ chatId });
+    const reviewQueue = (await serviceApi.getReviewQueue({ chatId })) || [];
+    let authorQueueIdx = -1;
+    const excludeUserQueue = reviewQueue.filter((id, idx) => {
+      if (id !== authorId) return id;
+      authorQueueIdx = idx;
+    });
 
-    if (!reviewQueue || !reviewQueue.length) {
+    if (!excludeUserQueue.length) {
       return reply('Everybody busy');
       return;
     }
 
     const reviewId = nanoid();
     const review = new Review(reviewId, msg, authorId);
-    const nextUserId = reviewQueue.shift();
-
+    const nextUserId = excludeUserQueue.shift();
+    if(authorQueueIdx !== -1) {
+      excludeUserQueue.splice(authorQueueIdx, 0, authorId)
+    }
     await serviceApi.addReview({ id: reviewId, chatId }, review);
     await serviceApi.addUserReview({ id: nextUserId, chatId }, reviewId);
-    await serviceApi.addReviewQueue({ chatId }, reviewQueue);
+    await serviceApi.addReviewQueue({ chatId }, excludeUserQueue);
 
     const user = await serviceApi.getUser({ chatId, id: nextUserId });
 

@@ -29,14 +29,34 @@ describe('review Service', () => {
 
     const filledQueue = [...dbMock[chatId].review_queue];
 
-    for (let i = 1; i < 10; i++) {
-      const tgCtx = getTgCtx(i);
+    for (let i = 1; i < 9; i++) {
+      const tgCtx = getTgCtx(9);
 
       // @ts-ignore because of tgCtx is mock and not extend to TelegrafCtx
       await gService.setReview(tgCtx);
       filledQueue.shift();
       expect(dbMock[chatId].review_queue).toEqual(filledQueue);
     }
+  });
+
+  it('remove id from queue exclude author id', async () => {
+    const dbMock = createEmptyDb(chatId);
+    const gService = reviewService(apiReviewMock(dbMock));
+
+    for (let i = 1; i < 10; i++) {
+      const user = getUserObj(i, `name${i}`);
+      addUserToMockDb(dbMock, chatId, user);
+    }
+
+    const filledQueue = [...dbMock[chatId].review_queue];
+
+    const tgCtx = getTgCtx(1);
+
+    // @ts-ignore because of tgCtx is mock and not extend to TelegrafCtx
+    await gService.setReview(tgCtx);
+    // remove review_queue[1] el because queue[0] === authorID
+    filledQueue.splice(1, 1);
+    expect(dbMock[chatId].review_queue).toEqual(filledQueue);
   });
 
   it('set review to user only after disabled users', async () => {

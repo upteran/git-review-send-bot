@@ -13,12 +13,9 @@ export function initBot(): void {
     console.error('Bot init config error');
     return;
   }
-  const bot = new Telegraf(apiKey, {
-    // @ts-ignore
-    username: botUsername
-  });
+  const bot = new Telegraf(apiKey);
   addBotCommands([...groupCommands, ...reviewCommands], bot);
-  bot.startPolling();
+  bot.launch();
   console.log('\nStart bot');
 }
 
