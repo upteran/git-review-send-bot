@@ -22,6 +22,7 @@ const getUsersReview =
   (db: DbChatType) =>
   async (config: GroupApiType): Promise<string> => {
     const { chatId, id = 1 } = config;
+    // @ts-ignore
     return db[chatId].users_review[id];
   };
 const addReviewQueue =
@@ -68,7 +69,6 @@ const getUsersReviewList =
   };
 const getReview = (db: DbChatType) => async (config: GroupApiType) => {
   const { chatId, id } = config;
-  // @ts-ignore
   return db[chatId].reviews[id];
 };
 const getReviewsList =
@@ -86,7 +86,7 @@ const getUsersList =
 const addUserReview =
   (db: DbChatType) =>
   async (config: GroupApiType, value: any): Promise<void> => {
-    const { chatId, id } = config;
+    const { chatId, id = '' } = config;
     // @ts-ignore
     db[chatId].users_review[id] = value;
   };
@@ -98,7 +98,7 @@ const removeUserReview =
       // @ts-ignore
       db[chatId].users_review[id] = null;
     } else {
-      // @ts-ignore
+      // @ts-ignore set null to test check
       db[chatId].users_review = null;
     }
   };
@@ -107,10 +107,10 @@ const removeReview =
   async (config: GroupApiType): Promise<void> => {
     const { chatId, id } = config;
     if (id) {
-      // @ts-ignore
+      // @ts-ignore set null to test check
       db[chatId].reviews[id] = null;
     } else {
-      // @ts-ignore
+      // @ts-ignore set null to test check
       db[chatId].reviews = null;
     }
   };

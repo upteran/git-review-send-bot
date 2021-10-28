@@ -54,7 +54,7 @@ export function getData({ path }: { path: string }) {
 
 export function updateData({ path }: { path: string }) {
   return function <T>(apiConfig: GroupApiType, params: T): Promise<void> {
-    const { id, chatId } = apiConfig;
+    const { id = '', chatId } = apiConfig;
     if (!params) {
       throw new TypeError(`Error ${path} update, params to update not exists`);
     }
