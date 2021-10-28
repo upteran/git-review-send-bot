@@ -8,10 +8,3 @@ export type Record<T extends number | string, U> = {
 export let myUserRecord: Record<string, User>;
 export let myUsersReviewRecord: Record<string, string | number>;
 export let myReviewRecord: Record<string, Review>;
-
-export interface IUser {
-  id: number;
-  username: string;
-  status: string;
-  reviews: Array<number> | null;
-}

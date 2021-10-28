@@ -1,9 +1,8 @@
-import { IUser } from '../../../models/types';
 import User from '../../../models/User';
 import Review from '../../../models/Review';
 import { DbChatType } from '../../../services/tests/types';
 
-export const getUserObj = (id: number, username: string): IUser =>
+export const getUserObj = (id: number, username: string): User =>
   new User(id, username);
 
 export const getUserRecord = (id: number, username: string): object => ({

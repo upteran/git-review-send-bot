@@ -1,5 +1,5 @@
 import { TelegrafContext } from 'telegraf/typings/context';
-import User from 'app/models/User';
+import User from '../../models/User';
 import { IGroupServiceApi } from '../../api/types';
 import { chatErrorHandlerDecorator } from '../../helpers/errorHandler';
 

@@ -1,5 +1,4 @@
-import { escape } from 'app/helpers/escapeMarkdown';
-import { IUser } from 'app/models/types';
+import { escape } from '../helpers/escapeMarkdown';
 /**
  * Entity to represent a telegram user.
  */
@@ -27,18 +26,5 @@ export default class User {
 
   get name(): string {
     return escape(this.username);
-  }
-
-  get userStatus(): string {
-    return this.status;
-  }
-
-  get params(): IUser {
-    return {
-      id: this.id,
-      username: this.username,
-      status: this.status,
-      reviews: this.reviews
-    };
   }
 }

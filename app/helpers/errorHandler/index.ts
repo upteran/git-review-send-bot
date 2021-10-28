@@ -2,7 +2,7 @@ import { TelegrafContext } from 'telegraf/typings/context';
 
 import { ErrorHandlerFnType } from './types';
 
-// TODO: add normal types
+// TODO: add normal types and tests
 function handleError(
   ctx: any,
   errorClass: any,

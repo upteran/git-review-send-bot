@@ -1,6 +1,7 @@
 import Review from '../models/Review';
+import User from '../models/User';
+
 import {
-  IUser,
   myReviewRecord,
   myUsersReviewRecord,
   myUserRecord
@@ -25,11 +26,11 @@ export type GetUsersReviewListType = GenericApiFn<
 >;
 export type GetReviewType = GenericApiFn<undefined, Review>;
 export type GetReviewsListType = GenericApiFn<undefined, typeof myReviewRecord>;
-export type GetUserType = GenericApiFn<undefined, IUser>;
+export type GetUserType = GenericApiFn<undefined, User>;
 export type GetUsersListType = GenericApiFn<undefined, typeof myUserRecord>;
 export type RemoveUserReviewType = GenericApiFn<undefined, void>;
 export type RemoveReviewType = GenericApiFn<undefined, void>;
-export type AddUserToGroupType = GenericApiFn<IUser, void>;
+export type AddUserToGroupType = GenericApiFn<User, void>;
 export type UpdateUserType = GenericApiFn<object, void>;
 export type AddUserReviewType = GenericApiFn<string, void>;
 

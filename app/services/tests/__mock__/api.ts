@@ -3,9 +3,9 @@ import {
   IGroupServiceApi,
   IReviewServiceApi
 } from '../../../api/types';
+import User from '../../../models/User';
 import { DbChatType } from '../types';
 import {
-  IUser,
   myUserRecord,
   myUsersReviewRecord,
   myReviewRecord
@@ -47,7 +47,7 @@ const updateUser =
   };
 const getUser =
   (db: DbChatType) =>
-  async (config: GroupApiType): Promise<IUser> => {
+  async (config: GroupApiType): Promise<User> => {
     const { chatId, id } = config;
     // @ts-ignore
     return db[chatId].members[id];

@@ -23,14 +23,4 @@ export default class Review {
     this.endDateTime = null;
     this.authorId = authorId;
   }
-
-  get params(): object {
-    return {
-      id: this.id,
-      msg: this.msg,
-      createDateTime: this.createDateTime,
-      endDateTime: this.endDateTime,
-      authorId: this.authorId
-    };
-  }
 }
