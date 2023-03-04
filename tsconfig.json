@@ -16,7 +16,7 @@
 
     "typeRoots": ["node_modules/@types"]
   },
-  "include": ["src/**/*.ts"],
+  "include": ["*.ts"],
   "exclude": ["node_modules"],
   "overrides": [
     {

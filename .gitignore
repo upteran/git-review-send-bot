@@ -5,3 +5,5 @@ firebase-admin-sdk-secret-key.json
 .idea
 package-lock.json
 .env
+.DS_Store
+dist

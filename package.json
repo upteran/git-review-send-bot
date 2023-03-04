@@ -5,6 +5,7 @@
   "main": "index.ts",
   "scripts": {
     "test": "jest --testPathPattern .*\\.test\\.ts",
+    "build": "tsc --project tsconfig.json",
     "test:watch": "yarn test --watch",
     "start": "ts-node .",
     "start:dev": "nodemon -x ts-node . -e ts,json",
