@@ -7,6 +7,7 @@ WORKDIR /app
 COPY package*.json ./
 COPY tsconfig.json ./
 RUN yarn install
+RUN yarn build
 COPY dist .
 RUN ls -a
 # If you are building your code for production
