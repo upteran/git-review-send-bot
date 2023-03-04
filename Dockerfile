@@ -6,9 +6,10 @@ WORKDIR /app
 # where available (npm@5+)
 COPY package*.json ./
 COPY tsconfig.json ./
+COPY ./app ./
 RUN yarn install
 RUN yarn build
-COPY dist .
+COPY ./dist .
 RUN ls -a
 # If you are building your code for production
 # RUN npm ci --only=production
