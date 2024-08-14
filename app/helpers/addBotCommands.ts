@@ -1,13 +1,12 @@
-import Telegraf from 'telegraf';
+import { Telegraf } from 'telegraf';
 
 export type Command = {
   name: string;
-  cb: Function;
+  cb: (ctx: any) => void;
 };
 
-// @ts-ignore
 export function addBotCommands(commands: Array<Command>, bot: Telegraf): void {
-  commands.forEach(({ name, cb }) => {
+  commands.forEach(({ name, cb }: Command) => {
     bot.command(name, cb);
   });
 }
