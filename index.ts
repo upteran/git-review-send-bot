@@ -1,4 +1,4 @@
-import Telegraf from 'telegraf';
+import { Telegraf } from 'telegraf';
 import http from 'http';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();

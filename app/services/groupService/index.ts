@@ -1,4 +1,4 @@
-import { TelegrafContext } from 'telegraf/typings/context';
+import TelegrafContext from 'telegraf/typings/context';
 import User from '../../models/User';
 import { IGroupServiceApi } from '../../api/types';
 import { chatErrorHandlerDecorator } from '../../helpers/errorHandler';
@@ -20,17 +20,16 @@ export const groupService = (api: IGroupServiceApi): IGroupService => {
   const registrationUser = async (ctx: TelegrafContext) => {
     const {
       // @ts-ignore
-      from: { id, username, first_name },
-      // @ts-ignore
-      chat: { id: chatId },
-      reply
+      chat: { id: chatId }
     } = ctx;
+    // @ts-ignore
+    const { id, username, first_name } = ctx.update.message.from;
 
-    const isCurrUserExist = !!(await serviceApi.getUser({ chatId, id }));
-    if (isCurrUserExist) {
-      reply('User already exist!');
-      return;
-    }
+    // const isCurrUserExist = !!(await serviceApi.getUser({ chatId, id }));
+    // if (isCurrUserExist) {
+    //   ctx.reply('User already exist!');
+    //   return;
+    // }
     // TODO: add check to registr before user
     const user = new User(id, username || first_name);
     const reviewQueue = (await serviceApi.getReviewQueue({ chatId })) || [];
@@ -42,17 +41,16 @@ export const groupService = (api: IGroupServiceApi): IGroupService => {
     }
     await serviceApi.addReviewQueue({ chatId }, reviewQueue);
 
-    reply(`Welcome to team!`);
+    ctx.reply(`Welcome to team!`);
   };
 
   const enableUser = async (ctx: TelegrafContext) => {
     const {
       // @ts-ignore
-      from: { id },
-      // @ts-ignore
-      chat: { id: chatId },
-      reply
+      chat: { id: chatId }
     } = ctx;
+    // @ts-ignore
+    const { id } = ctx.update.message.from;
     await serviceApi.updateUser({ id, chatId }, { status: 'active' });
     const reviewQueue = (await serviceApi.getReviewQueue({ chatId })) || [];
     // TODO: realize Map collection
@@ -60,21 +58,20 @@ export const groupService = (api: IGroupServiceApi): IGroupService => {
       reviewQueue.push(id);
     }
     await serviceApi.addReviewQueue({ chatId }, reviewQueue);
-    reply(`You are opt in now!`);
+    ctx.reply(`You are opt in now!`);
   };
 
   const disableUser = async (ctx: TelegrafContext) => {
     const {
       // @ts-ignore
-      from: { id },
-      // @ts-ignore
-      chat: { id: chatId },
-      reply
+      chat: { id: chatId }
     } = ctx;
+    // @ts-ignore
+    const { id } = ctx.update.message.from;
     const activeReview = await serviceApi.getUsersReview({ id, chatId });
 
     if (activeReview) {
-      reply(`You have got active MR, close it before out`);
+      ctx.reply(`You have got active MR, close it before out`);
       return;
     }
 
@@ -82,7 +79,7 @@ export const groupService = (api: IGroupServiceApi): IGroupService => {
     const filteredQueue = reviewQueue.filter(userId => userId !== id);
     await serviceApi.addReviewQueue({ chatId }, filteredQueue);
     await serviceApi.updateUser({ id, chatId }, { status: 'disable' });
-    reply(`You are opt out now!`);
+    ctx.reply(`You are opt out now!`);
   };
 
   return {

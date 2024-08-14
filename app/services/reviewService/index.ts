@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { TelegrafContext } from 'telegraf/typings/context';
+import TelegrafContext from 'telegraf/typings/context';
 import { nanoid } from 'nanoid';
 
 import Review from '../../models/Review';
@@ -19,17 +19,16 @@ export const reviewService = (api: IReviewServiceApi) => {
   const setReview = async (ctx: TelegrafContext) => {
     const {
       // @ts-ignore
-      from: { id: authorId },
-      // @ts-ignore
       chat: { id: chatId },
-      message,
-      reply
+      message
     } = ctx;
 
+    // @ts-ignore
+    const { id: authorId } = ctx.update.message.from;
     const msg = getUserMessage(message);
 
     if (!msg || !msg.length) {
-      reply('Need merge request link!');
+      ctx.reply('Need merge request link!');
       return;
     }
 
@@ -41,8 +40,7 @@ export const reviewService = (api: IReviewServiceApi) => {
     });
 
     if (!excludeUserQueue.length) {
-      return reply('Everybody busy');
-      return;
+      return ctx.reply('Everybody busy');
     }
 
     const reviewId = nanoid();
@@ -57,7 +55,7 @@ export const reviewService = (api: IReviewServiceApi) => {
 
     const user = await serviceApi.getUser({ chatId, id: nextUserId });
 
-    reply(
+    ctx.reply(
       `${parseHtmlName(user.username, user.id)}, you got merge request: ${
         review.msg
       }`,
@@ -70,12 +68,11 @@ export const reviewService = (api: IReviewServiceApi) => {
   const endReview = async (ctx: TelegrafContext) => {
     const {
       // @ts-ignore
-      from: { id },
-      // @ts-ignore
-      chat: { id: chatId },
-      reply
+      chat: { id: chatId }
     } = ctx;
 
+    // @ts-ignore
+    const { id } = ctx.update.message.from;
     const userReviewId = await serviceApi.getUsersReview({ id, chatId });
     await serviceApi.removeUserReview({ id, chatId });
     await serviceApi.removeReview({ id: userReviewId, chatId });
@@ -88,7 +85,7 @@ export const reviewService = (api: IReviewServiceApi) => {
 
     const user = await serviceApi.getUser({ chatId, id });
 
-    reply(`dobby if free ${parseHtmlName(user.username, user.id)}`, {
+    ctx.reply(`dobby if free ${parseHtmlName(user.username, user.id)}`, {
       parse_mode: 'HTML'
     });
   };
@@ -96,11 +93,10 @@ export const reviewService = (api: IReviewServiceApi) => {
   const checkStatus = async (ctx: TelegrafContext) => {
     const {
       // @ts-ignore
-      from: { id },
-      // @ts-ignore
-      chat: { id: chatId },
-      reply
+      chat: { id: chatId }
     } = ctx;
+    // @ts-ignore
+    const { id } = ctx.update.message.from;
     const reviewId = await serviceApi.getUsersReview({ id, chatId });
     const review = await serviceApi.getReview({ id: reviewId, chatId });
     const user = await serviceApi.getUser({ chatId, id });
@@ -112,7 +108,7 @@ export const reviewService = (api: IReviewServiceApi) => {
       }]`;
     }
 
-    reply(msg, {
+    ctx.reply(msg, {
       parse_mode: 'Markdown'
     });
   };
@@ -120,15 +116,14 @@ export const reviewService = (api: IReviewServiceApi) => {
   const checkAllStatus = async (ctx: TelegrafContext) => {
     const {
       // @ts-ignore
-      from: { id },
-      // @ts-ignore
-      chat: { id: chatId },
-      reply
+      chat: { id: chatId }
     } = ctx;
+    // @ts-ignore
+    const { id } = ctx.update.message.from;
     const reviewsMap = await serviceApi.getUsersReviewList({ chatId });
 
     if (!reviewsMap) {
-      reply('All users are available');
+      ctx.reply('All users are available');
       return;
     }
     const users = await serviceApi.getUsersList({ chatId });
@@ -137,14 +132,14 @@ export const reviewService = (api: IReviewServiceApi) => {
       const currUser = users[userId];
       const currReview = reviews[reviewsMap[userId]];
       if (currReview) {
-        reply(
+        ctx.reply(
           `${parseHtmlName(currUser.username, id)}: MR - ${currReview.msg}`,
           {
             parse_mode: 'HTML'
           }
         );
       } else {
-        reply(
+        ctx.reply(
           `${parseHtmlName(currUser.username, id)}: need review something`,
           {
             parse_mode: 'HTML'
@@ -157,8 +152,7 @@ export const reviewService = (api: IReviewServiceApi) => {
   const clearAllReviews = async (ctx: TelegrafContext) => {
     const {
       // @ts-ignore
-      chat: { id: chatId },
-      reply
+      chat: { id: chatId }
     } = ctx;
     const queue: Array<number> = [];
     const users = (await serviceApi.getUsersList({ chatId })) || [];
@@ -169,7 +163,7 @@ export const reviewService = (api: IReviewServiceApi) => {
     await serviceApi.removeUserReview({ chatId });
     await serviceApi.removeReview({ chatId });
     await serviceApi.addReviewQueue({ chatId }, queue);
-    reply('All reviews are cleared!');
+    ctx.reply('All reviews are cleared!');
   };
 
   return {

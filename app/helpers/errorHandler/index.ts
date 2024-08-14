@@ -1,4 +1,4 @@
-import { TelegrafContext } from 'telegraf/typings/context';
+import TelegrafContext from 'telegraf/typings/context';
 
 import { ErrorHandlerFnType } from './types';
 
