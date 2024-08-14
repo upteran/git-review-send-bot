@@ -1,5 +1,5 @@
 /* eslint-disable */
-import TelegrafContext from 'telegraf/typings/context';
+import { Context as TelegrafContext } from 'telegraf/typings/context';
 import { nanoid } from 'nanoid';
 
 import Review from '../../models/Review';

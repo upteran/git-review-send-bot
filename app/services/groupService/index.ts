@@ -1,12 +1,12 @@
-import TelegrafContext from 'telegraf/typings/context';
+import { Context as TelegrafContext } from 'telegraf/typings/context';
 import User from '../../models/User';
 import { IGroupServiceApi } from '../../api/types';
 import { chatErrorHandlerDecorator } from '../../helpers/errorHandler';
 
 interface IGroupService {
-  registrationUser: Function;
-  enableUser: Function;
-  disableUser: Function;
+  registrationUser: (ctx: any) => void;
+  enableUser: (ctx: any) => void;
+  disableUser: (ctx: any) => void;
 }
 
 const errorCb = (name: string) => (e: any) => {
